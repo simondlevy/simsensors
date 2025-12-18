@@ -1,5 +1,5 @@
 /* 
-   Simple class for wall worlds
+   Simple class for wall obstacles
 
    Copyright (C) 2025 Simon D. Levy
 

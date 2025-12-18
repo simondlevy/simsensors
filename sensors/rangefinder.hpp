@@ -1,5 +1,5 @@
 /* 
-   Lidar simulator
+   Rangefinder simulator
 
    Copyright (C) 2025 Simon D. Levy
 
@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <opencv2/opencv.hpp>
-
 class SimRangefinder {
+
+    friend class RangefinderVisualizer;
 
     public:
 
@@ -46,36 +46,6 @@ class SimRangefinder {
             this->min_distance_m = min_distance_m;
             this->max_distance_m = max_distance_m;
             this->field_of_view_radians = field_of_view_radians;
-        }
-
-        void show(const int16_t * distance_mm, const uint16_t scaleup) 
-        {
-            const uint16_t new_width = this->width * scaleup;
-            const uint16_t new_height = this->height * scaleup;
-
-            cv::Mat img = cv::Mat::zeros(new_height, new_width, CV_8UC1);
-
-            const double min_distance_mm = this->min_distance_m * 1000;
-            const double max_distance_mm = this->max_distance_m * 1000;
-
-            for (uint8_t x=0; x<this->width; ++x) {
-
-                for (uint8_t y=0; y<this->height; ++y) {
-
-                    const double d = distance_mm[y * this->width + x];
-
-                    cv::rectangle(img,
-                            cv::Point(x*scaleup, y*scaleup),
-                            cv::Point((x+1)*scaleup, (y+1)*scaleup),
-                            d == -1 ? 255 : (uint8_t)((d-min_distance_mm) /
-                                (double)(max_distance_mm - min_distance_mm) * 255), 
-                            -1);
-                }
-            }
-
-            cv::imshow("lidar", img);
-
-            cv::waitKey(1);
         }
 
         void report(const int16_t * distance_mm) 
