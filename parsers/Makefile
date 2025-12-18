@@ -16,19 +16,21 @@ CFLAGS = -O3 -std=c++11 -Wall -Wextra
 
 HFDIR = $(HOME)/Desktop/hackflight/webots
 
-all: main
+EXE = test
 
-run: main
-	./main $(HFDIR)/worlds/maze.wbt $(HFDIR)/protos/DiyQuad.proto 
+all: $(EXE)
 
-main: main.o
-	g++ -o main main.o
+run: $(EXE)
+	./$(EXE) $(HFDIR)/worlds/maze.wbt $(HFDIR)/protos/DiyQuad.proto 
 
-main.o: main.cpp  *.h*
-	g++ -c -I.. main.cpp
+$(EXE): $(EXE).o
+	g++ -o $(EXE) $(EXE).o
+
+$(EXE).o: $(EXE).cpp  *.h*
+	g++ -c -I.. $(EXE).cpp
 
 clean:
-	rm -f main *.o
+	rm -f $(EXE) *.o
 
 edit:
-	vim main.cpp
+	vim $(EXE).cpp
