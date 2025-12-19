@@ -23,73 +23,76 @@
 #include <parsers/utils.hpp>
 #include <sensors/rangefinder.hpp>
 
-class RobotParser {
+namespace simsens {
 
-    public:
+    class RobotParser {
 
-        vector<SimRangefinder *> rangefinders;
+        public:
 
-        void parse(const string robot_file_name)
-        {
-            ifstream file(robot_file_name);
+            vector<SimRangefinder *> rangefinders;
 
-            if (file.is_open()) {
+            void parse(const string robot_file_name)
+            {
+                ifstream file(robot_file_name);
 
-                string line;
+                if (file.is_open()) {
 
-                SimRangefinder * _rangefinder = nullptr;
+                    string line;
 
-                while (getline(file, line)) {
+                    SimRangefinder * _rangefinder = nullptr;
 
-                    if (ParserUtils::string_contains(line, "RangeFinder {")) {
-                        _rangefinder = new SimRangefinder();
-                    }
+                    while (getline(file, line)) {
 
-                    if (_rangefinder) {
-
-                        double tmp = 0;
-
-                        ParserUtils::try_parse_double(line, "fieldOfView",
-                                _rangefinder->field_of_view_radians);
-
-                        ParserUtils::try_parse_int(line, "width",
-                                _rangefinder->width);
-
-                        ParserUtils::try_parse_int(line, "height",
-                                _rangefinder->height);
-
-                        if (ParserUtils::try_parse_double(
-                                    line, "minRange", tmp)) {
-                            _rangefinder->min_distance_mm = 1000 * tmp;
+                        if (ParserUtils::string_contains(line, "RangeFinder {")) {
+                            _rangefinder = new SimRangefinder();
                         }
 
-                        if (ParserUtils::try_parse_double(
-                                    line, "maxRange", tmp)) {
-                            _rangefinder->max_distance_mm = 1000 * tmp;
-                        }
+                        if (_rangefinder) {
 
-                        if (ParserUtils::string_contains(line, "}")) {
-                            rangefinders.push_back(_rangefinder);
-                            _rangefinder = nullptr;
+                            double tmp = 0;
+
+                            ParserUtils::try_parse_double(line, "fieldOfView",
+                                    _rangefinder->field_of_view_radians);
+
+                            ParserUtils::try_parse_int(line, "width",
+                                    _rangefinder->width);
+
+                            ParserUtils::try_parse_int(line, "height",
+                                    _rangefinder->height);
+
+                            if (ParserUtils::try_parse_double(
+                                        line, "minRange", tmp)) {
+                                _rangefinder->min_distance_mm = 1000 * tmp;
+                            }
+
+                            if (ParserUtils::try_parse_double(
+                                        line, "maxRange", tmp)) {
+                                _rangefinder->max_distance_mm = 1000 * tmp;
+                            }
+
+                            if (ParserUtils::string_contains(line, "}")) {
+                                rangefinders.push_back(_rangefinder);
+                                _rangefinder = nullptr;
+                            }
                         }
                     }
                 }
+
+                else {
+                    fprintf(stderr, "Unable to open file %s for input\n",
+                            robot_file_name.c_str());
+                }
             }
 
-            else {
-                fprintf(stderr, "Unable to open file %s for input\n",
-                       robot_file_name.c_str());
+            void report()
+            {
+                for (auto _rangefinder : rangefinders) {
+                    _rangefinder->dump();
+                }
             }
-        }
 
-        void report()
-        {
-            for (auto _rangefinder : rangefinders) {
-                _rangefinder->dump();
-            }
-        }
+        private:
 
-    private:
+    };
 
-};
-
+}

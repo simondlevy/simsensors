@@ -18,15 +18,28 @@
 
 #pragma once
 
-typedef struct {
-    double x;
-    double y;
-    double z;
-} vec3_t;
+namespace simsens {
 
-typedef struct {
-    double w;
-    double x;
-    double y;
-    double z;
-} vec4_t;
+    typedef struct {
+        double x;
+        double y;
+        double z;
+    } vec3_t;
+
+    typedef struct {
+        double x;
+        double y;
+        double z;
+        double phi;
+        double theta;
+        double psi;
+    } pose_t;
+
+    typedef struct {
+        double w;
+        double x;
+        double y;
+        double z;
+    } vec4_t;
+
+};

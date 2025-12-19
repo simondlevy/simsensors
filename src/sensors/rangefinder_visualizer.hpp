@@ -22,44 +22,48 @@
 
 #include <sensors/rangefinder.hpp>
 
-class RangefinderVisualizer {
+namespace simsens {
 
-    public:
+    class RangefinderVisualizer {
 
-        RangefinderVisualizer(SimRangefinder * rangefinder)
-        {
-            this->rangefinder = rangefinder;
-        }
+        public:
 
-        void show(const int * distances_mm, const int scaleup) 
-        {
-            const int new_width = this->rangefinder->width * scaleup;
-            const int new_height = this->rangefinder->height * scaleup;
-
-            cv::Mat img = cv::Mat::zeros(new_height, new_width, CV_8UC1);
-
-            for (uint8_t x=0; x<this->rangefinder->width; ++x) {
-
-                for (uint8_t y=0; y<this->rangefinder->height; ++y) {
-
-                    const int d = distances_mm[y * this->rangefinder->width + x];
-
-                    cv::rectangle(img,
-                            cv::Point(x*scaleup, y*scaleup),
-                            cv::Point((x+1)*scaleup, (y+1)*scaleup),
-                            d == -1 ? 255 : (uint8_t)((d-this->rangefinder->min_distance_mm) /
-                                (double)(this->rangefinder->max_distance_mm -
-                                    this->rangefinder->min_distance_mm) * 255), 
-                            -1);
-                }
+            RangefinderVisualizer(SimRangefinder * rangefinder)
+            {
+                this->rangefinder = rangefinder;
             }
 
-            cv::imshow("lidar", img);
+            void show(const int * distances_mm, const int scaleup) 
+            {
+                const int new_width = this->rangefinder->width * scaleup;
+                const int new_height = this->rangefinder->height * scaleup;
 
-            cv::waitKey(1);
-        }
+                cv::Mat img = cv::Mat::zeros(new_height, new_width, CV_8UC1);
 
-    private:
+                for (uint8_t x=0; x<this->rangefinder->width; ++x) {
 
-        SimRangefinder * rangefinder;
-};
+                    for (uint8_t y=0; y<this->rangefinder->height; ++y) {
+
+                        const int d = distances_mm[y * this->rangefinder->width + x];
+
+                        cv::rectangle(img,
+                                cv::Point(x*scaleup, y*scaleup),
+                                cv::Point((x+1)*scaleup, (y+1)*scaleup),
+                                d == -1 ? 255 : (uint8_t)((d-this->rangefinder->min_distance_mm) /
+                                    (double)(this->rangefinder->max_distance_mm -
+                                        this->rangefinder->min_distance_mm) * 255), 
+                                -1);
+                    }
+                }
+
+                cv::imshow("lidar", img);
+
+                cv::waitKey(1);
+            }
+
+        private:
+
+            SimRangefinder * rangefinder;
+    };
+
+}

@@ -30,12 +30,12 @@ int main(int argc, char ** argv)
     else {
 
         const std::string world =  argv[1];
-        static WorldParser _worldParser;
+        static simsens::WorldParser _worldParser;
         _worldParser.parse(world);
         _worldParser.report();
 
         const std::string robot =  argv[2];
-        static RobotParser _robotParser;
+        static simsens::RobotParser _robotParser;
         _robotParser.parse(robot);
         _robotParser.report();
     }

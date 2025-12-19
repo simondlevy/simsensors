@@ -22,35 +22,39 @@
 
 #include <sim_datatypes.h>
 
-class Wall {
+namespace simsens {
 
-    public:
+    class Wall {
 
-        vec3_t translation;
-        vec4_t rotation;
-        vec3_t size;
+        public:
 
-        Wall()
-        {
-            rotation.w = 0;
-            rotation.x = 0;
-            rotation.y = 1;
-            rotation.z = 0;
-        }
+            vec3_t translation;
+            vec4_t rotation;
+            vec3_t size;
 
-        void dump()
-        {
-            printf("Wall: \n");
+            Wall()
+            {
+                rotation.w = 0;
+                rotation.x = 0;
+                rotation.y = 1;
+                rotation.z = 0;
+            }
 
-            printf("  translation: x=%+3.3f y=%+3.3f z=%+3.3f\n",
-                    translation.x, translation.y, translation.z);
+            void dump()
+            {
+                printf("Wall: \n");
 
-            printf("  rotation: w=%+3.3f x=%+3.3f y=%+3.3f z=%+3.3f\n",
-                    rotation.w, rotation.x, rotation.y, rotation.z);
+                printf("  translation: x=%+3.3f y=%+3.3f z=%+3.3f\n",
+                        translation.x, translation.y, translation.z);
 
-            printf("  size: x=%3.3f y=%3.3f z=%3.3f\n",
-                    size.x, size.y, size.z);
+                printf("  rotation: w=%+3.3f x=%+3.3f y=%+3.3f z=%+3.3f\n",
+                        rotation.w, rotation.x, rotation.y, rotation.z);
 
-            printf("\n");
-        }
-};
+                printf("  size: x=%3.3f y=%3.3f z=%3.3f\n",
+                        size.x, size.y, size.z);
+
+                printf("\n");
+            }
+    };
+
+}

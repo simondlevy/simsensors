@@ -18,12 +18,14 @@
 
 #pragma once
 
-class SimRangefinder {
+namespace simsens {
 
-    friend class RangefinderVisualizer;
-    friend class RobotParser;
+    class SimRangefinder {
 
-    private:
+        friend class RangefinderVisualizer;
+        friend class RobotParser;
+
+        private:
 
         int width;
         int height; 
@@ -31,7 +33,7 @@ class SimRangefinder {
         int max_distance_mm;
         double field_of_view_radians;
 
-    public:
+        public:
 
         void read(const vec3_t & robot_position, const vector<Wall *> walls,
                 int * distances_mm)
@@ -58,4 +60,6 @@ class SimRangefinder {
 
             printf("\n");
         }
-};
+    };
+
+}

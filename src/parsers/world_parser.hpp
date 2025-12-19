@@ -23,56 +23,58 @@
 #include <parsers/utils.hpp>
 #include <obstacles/wall.hpp>
 
-class WorldParser {
+namespace simsens {
 
-    public:
+    class WorldParser {
 
-        vector<Wall *> walls;
+        public:
 
-        void parse(const string world_file_name)
-        {
-            ifstream file(world_file_name);
+            vector<Wall *> walls;
 
-            if (file.is_open()) {
+            void parse(const string world_file_name)
+            {
+                ifstream file(world_file_name);
 
-                string line;
+                if (file.is_open()) {
 
-                Wall * _wall = nullptr;
+                    string line;
 
-                while (getline(file, line)) {
+                    Wall * _wall = nullptr;
 
-                    if (ParserUtils::string_contains(line, "Wall {")) {
-                        _wall = new Wall();
-                    }
+                    while (getline(file, line)) {
 
-                    if (_wall) {
+                        if (ParserUtils::string_contains(line, "Wall {")) {
+                            _wall = new Wall();
+                        }
 
-                        ParserUtils::try_parse_vec3(line, "translation",
-                                _wall->translation);
-                        ParserUtils::try_parse_vec4(line, "rotation",
-                                _wall->rotation);
-                        ParserUtils::try_parse_vec3(line, "size",
-                                _wall->size);
+                        if (_wall) {
 
-                        if (ParserUtils::string_contains(line, "}")) {
-                            walls.push_back(_wall);
-                            _wall = nullptr;
+                            ParserUtils::try_parse_vec3(line, "translation",
+                                    _wall->translation);
+                            ParserUtils::try_parse_vec4(line, "rotation",
+                                    _wall->rotation);
+                            ParserUtils::try_parse_vec3(line, "size",
+                                    _wall->size);
+
+                            if (ParserUtils::string_contains(line, "}")) {
+                                walls.push_back(_wall);
+                                _wall = nullptr;
+                            }
                         }
                     }
                 }
+
+                else {
+                    fprintf(stderr, "Unable to open file %s for input\n",
+                            world_file_name.c_str());
+                }
             }
 
-            else {
-                fprintf(stderr, "Unable to open file %s for input\n",
-                        world_file_name.c_str());
+            void report()
+            {
+                for (auto wall : walls) {
+                    wall->dump();
+                }
             }
-        }
-
-        void report()
-        {
-            for (auto wall : walls) {
-                wall->dump();
-            }
-        }
-};
-
+    };
+}

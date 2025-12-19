@@ -19,33 +19,35 @@
 #include <utils.hpp>
 #include <rangefinder.hpp>
 
-class SensorParser {
+namespace simsens {
 
-    public:
+    class SensorParser {
 
-        void parse(string proto_file_name)
-        {
-            ifstream file(proto_file_name);
+        public:
 
-            string line;
+            void parse(string proto_file_name)
+            {
+                ifstream file(proto_file_name);
 
-            while (getline(file, line)) {
+                string line;
 
-                static Rangefinder * _rangerptr;
+                while (getline(file, line)) {
 
+                    static Rangefinder * _rangerptr;
+
+                }
             }
-        }
 
-        void report()
-        {
-            for (auto _rangerptr : _rangers) {
-                _rangerptr->dump();
+            void report()
+            {
+                for (auto _rangerptr : _rangers) {
+                    _rangerptr->dump();
+                }
             }
-        }
 
-    private:
+        private:
 
-        vector<Rangefinder *> _rangefinders;
+            vector<Rangefinder *> _rangefinders;
 
-};
-
+    };
+}
