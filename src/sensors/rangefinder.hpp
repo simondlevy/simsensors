@@ -24,11 +24,11 @@ class SimRangefinder {
 
     public:
 
-        double field_of_view_radians;
         int width;
         int height; 
         double min_distance_m;
         double max_distance_m;
+        double field_of_view_radians;
 
         SimRangefinder()
         {
