@@ -36,7 +36,10 @@ class SimRangefinder {
         void read(const vector<Wall *> walls, int * distances_mm)
         {
             (void)walls;
-            (void)distances_mm;
+
+            for (int k=0; k<this->width; ++k) {
+                distances_mm[k*this->height+k] = -1;
+            }
         }
 
         void dump()
