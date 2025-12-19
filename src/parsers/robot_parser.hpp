@@ -27,6 +27,8 @@ class RobotParser {
 
     public:
 
+        vector<SimRangefinder *> rangefinders;
+
         void parse(const string robot_file_name)
         {
             ifstream file(robot_file_name);
@@ -61,7 +63,7 @@ class RobotParser {
                                 _rangefinder->max_distance_m);
 
                         if (ParserUtils::string_contains(line, "}")) {
-                            _rangefinders.push_back(_rangefinder);
+                            rangefinders.push_back(_rangefinder);
                             _rangefinder = nullptr;
                         }
                     }
@@ -76,13 +78,12 @@ class RobotParser {
 
         void report()
         {
-            for (auto _rangefinder : _rangefinders) {
+            for (auto _rangefinder : rangefinders) {
                 _rangefinder->dump();
             }
         }
 
     private:
 
-        vector<SimRangefinder *> _rangefinders;
 };
 
