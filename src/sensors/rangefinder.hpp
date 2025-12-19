@@ -38,8 +38,11 @@ namespace simsens {
         void read(const pose_t & robot_pose, const vector<Wall *> walls,
                 int * distances_mm)
         {
-            printf("x=%+3.3fm y=%+3.3fm z=%+3.3fm\n",
+            printf("x=%+3.3fm y=%+3.3fm z=%+3.3fm | ",
                     robot_pose.x, robot_pose.y, robot_pose.z);
+
+            printf("phi=%+3.3f theta=%+3.3f psi=%+3.3f\n",
+                    robot_pose.phi, robot_pose.theta, robot_pose.psi);
 
             walls[0]->dump();
 
