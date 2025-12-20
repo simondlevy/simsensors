@@ -31,21 +31,38 @@ namespace simsens {
 
             static constexpr double MAX_WORLD_SIZE_M = 1000; // arbitrary
 
+            static constexpr float RAD2DEG = 180.0f / M_PI;
+
             int width;
             int height; 
             int min_distance_mm;
             int max_distance_mm;
             double field_of_view_radians;
 
-            void get_intersection(const pose_t & robot_pose, const Wall & wall,
+            void get_intersection(const pose_t & robot_pose, Wall & wall,
                     vec2_t & point)
             {
-                (void)wall;
+                wall.dump();
 
-                const double max_distance_m = this->max_distance_mm / 1000;
+                const auto psi = wall.rotation.z;
+                const auto len = wall.size.y / 2;
+                const vec2_t wall_end_1 = {
+                    wall.translation.x + len * sin(psi),
+                    wall.translation.y + len * cos(psi)
+                };
 
-                point.x = robot_pose.x + cos(robot_pose.psi) * max_distance_m;
-                point.y = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
+                const vec2_t wall_end_2 = {
+                    wall.translation.x - len * sin(psi),
+                    wall.translation.y - len * cos(psi)
+                };
+
+                point.x = wall_end_2.x;
+                point.y = wall_end_2.y;
+
+                (void)robot_pose;
+                //const double max_distance_m = this->max_distance_mm / 1000;
+                //point.x = robot_pose.x + cos(robot_pose.psi) * max_distance_m;
+                //point.y = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
             }
 
         public:
@@ -53,11 +70,6 @@ namespace simsens {
             void read(const pose_t & robot_pose, const vector<Wall *> walls,
                     int * distances_mm, vec2_t & endpoint)
             {
-                for (Wall * wall : walls) {
-                    wall->dump();
-                }
-                printf("-----------------------\n");
-
                 get_intersection(robot_pose, *walls[0], endpoint);
 
 
