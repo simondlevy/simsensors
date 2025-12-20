@@ -37,24 +37,29 @@ namespace simsens {
             int max_distance_mm;
             double field_of_view_radians;
 
-        public:
-
-            void read(const pose_t & robot_pose, const vector<Wall *> walls,
-                    int * distances_mm, double & end_x, double & end_y)
+            void get_intersection(const pose_t & robot_pose, const Wall & wall,
+                    vec2_t & point)
             {
-                (void)walls;
-                /*
-                printf("x=%+3.3fm y=%+3.3fm z=%+3.3fm | ",
-                        robot_pose.x, robot_pose.y, robot_pose.z);
-                printf("phi=%+3.3f theta=%+3.3f psi=%+3.3f\n",
-                        robot_pose.phi, robot_pose.theta, robot_pose.psi);
-                walls[0]->dump();
-                        */
+                (void)wall;
 
                 const double max_distance_m = this->max_distance_mm / 1000;
 
-                end_x = robot_pose.x + cos(robot_pose.psi) * max_distance_m;
-                end_y = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
+                point.x = robot_pose.x + cos(robot_pose.psi) * max_distance_m;
+                point.y = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
+            }
+
+        public:
+
+            void read(const pose_t & robot_pose, const vector<Wall *> walls,
+                    int * distances_mm, vec2_t & endpoint)
+            {
+                walls[0]->dump();
+
+
+                const double max_distance_m = this->max_distance_mm / 1000;
+
+                endpoint.x = robot_pose.x + cos(robot_pose.psi) * max_distance_m;
+                endpoint.y = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
 
 
                 // XXX show a diagonal pattern for now

@@ -23,6 +23,11 @@ namespace simsens {
     typedef struct {
         double x;
         double y;
+    } vec2_t;
+
+    typedef struct {
+        double x;
+        double y;
         double z;
     } vec3_t;
 
