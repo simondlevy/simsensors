@@ -1,5 +1,5 @@
 /* 
-   Datatypes for simulation
+   Math for simulation
 
    Copyright (C) 2025 Simon D. Levy
 
@@ -18,32 +18,16 @@
 
 #pragma once
 
+#include <math.h>
+
 namespace simsens {
 
-    typedef struct {
-        double x;
-        double y;
-    } vec2_t;
-
-    typedef struct {
-        double x;
-        double y;
-        double z;
-    } vec3_t;
-
-    typedef struct {
-        double x;
-        double y;
-        double z;
-        double phi;
-        double theta;
-        double psi;
-    } pose_t;
-
-    typedef struct {
-        double w;
-        double x;
-        double y;
-        double z;
-    } vec4_t;
+    void rotvec2euler(
+            const double w, const double x, const double y, const double z,
+            double & phi, double & theta, double & psi)
+    {
+        phi = atan2(2*(w*z+x*y), 1 - 2*(y*y+z*z));
+        theta = asin(2*(w*y-z*x));
+        psi = atan2(2*(w*x+y*z), 1 - 2*(x*x+y*y));
+    }
 };

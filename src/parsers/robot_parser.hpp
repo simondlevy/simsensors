@@ -22,6 +22,7 @@
 
 #include <parsers/utils.hpp>
 #include <sensors/rangefinder.hpp>
+#include <sim_math.hpp>
 
 namespace simsens {
 
@@ -39,43 +40,47 @@ namespace simsens {
 
                     string line;
 
-                    SimRangefinder * _rangefinder = nullptr;
+                    SimRangefinder * rangefinder = nullptr;
 
                     while (getline(file, line)) {
 
                         if (ParserUtils::string_contains(line, "RangeFinder {")) {
-                            _rangefinder = new SimRangefinder();
+                            rangefinder = new SimRangefinder();
                         }
 
-                        if (_rangefinder) {
+                        if (rangefinder) {
 
                             double tmp = 0;
 
                             ParserUtils::try_parse_double(line, "fieldOfView",
-                                    _rangefinder->field_of_view_radians);
+                                    rangefinder->field_of_view_radians);
 
                             ParserUtils::try_parse_int(line, "width",
-                                    _rangefinder->width);
+                                    rangefinder->width);
 
                             ParserUtils::try_parse_int(line, "height",
-                                    _rangefinder->height);
+                                    rangefinder->height);
 
                             if (ParserUtils::try_parse_double(
                                         line, "minRange", tmp)) {
-                                _rangefinder->min_distance_mm = 1000 * tmp;
+                                rangefinder->min_distance_mm = 1000 * tmp;
                             }
 
                             if (ParserUtils::try_parse_double(
                                         line, "maxRange", tmp)) {
-                                _rangefinder->max_distance_mm = 1000 * tmp;
+                                rangefinder->max_distance_mm = 1000 * tmp;
                             }
 
                             ParserUtils::try_parse_vec3(line, "translation",
-                                    _rangefinder->translation);
+                                    rangefinder->translation);
+
+                            vec4_t rotation = {};
+                            ParserUtils::try_parse_vec4(line, "rotation",
+                                    rotation);
 
                             if (ParserUtils::string_contains(line, "}")) {
-                                rangefinders.push_back(_rangefinder);
-                                _rangefinder = nullptr;
+                                rangefinders.push_back(rangefinder);
+                                rangefinder = nullptr;
                             }
                         }
                     }
@@ -89,8 +94,8 @@ namespace simsens {
 
             void report()
             {
-                for (auto _rangefinder : rangefinders) {
-                    _rangefinder->dump();
+                for (auto rangefinder : rangefinders) {
+                    rangefinder->dump();
                 }
             }
 

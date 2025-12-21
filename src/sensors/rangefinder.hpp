@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <math.h>
+#include <sim_math.hpp>
 
 namespace simsens {
 
@@ -34,7 +34,7 @@ namespace simsens {
         {
             (void)distances_mm;
 
-            // Get rangefinder beam dbg_endpoints
+            // Get rangefinder beam endpoints
             const double max_distance_m = this->max_distance_mm / 1000;
             const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
             const simsens::vec2_t beam_end = {
@@ -90,6 +90,7 @@ namespace simsens {
         int max_distance_mm;
         double field_of_view_radians;
         vec3_t translation;
+        vec4_t rotation;
 
         static double distance_to_wall(
                 const vec2_t beam_start,
