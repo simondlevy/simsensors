@@ -70,6 +70,9 @@ namespace simsens {
                                 _rangefinder->max_distance_mm = 1000 * tmp;
                             }
 
+                            ParserUtils::try_parse_vec3(line, "translation",
+                                    _rangefinder->translation);
+
                             if (ParserUtils::string_contains(line, "}")) {
                                 rangefinders.push_back(_rangefinder);
                                 _rangefinder = nullptr;
