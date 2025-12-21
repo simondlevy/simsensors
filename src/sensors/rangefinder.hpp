@@ -40,7 +40,7 @@ namespace simsens {
                 const auto y2 = y1 - sin(robot_pose.psi) * max_distance_m;
 
                 endpoint.z = -1;
-                double dist_min = INFINITY;
+                double dist = INFINITY;
 
                 for (auto wall : walls) {
 
@@ -63,13 +63,12 @@ namespace simsens {
                         const auto py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) / denom;
 
                         if (ge(px, x3) && le(px, x4) && ge(py, y4) && le(py, y3)) {
-                            const double dist = eucdist(x1, y1, px, py);
-                            if (dist < dist_min) {
-                                printf("%3.3f\n", dist);
+                            const double newdist = eucdist(x1, y1, px, py);
+                            if (newdist < dist) {
                                 endpoint.x = px;
                                 endpoint.y = py;
                                 endpoint.z = robot_pose.z;
-                                dist_min = dist;
+                                dist = newdist;
                             }
                         }
                     }
@@ -78,7 +77,14 @@ namespace simsens {
                     for (int k=0; k<this->width; ++k) {
                         distances_mm[k*this->height+k] = -1;
                     }
+
                 }
+
+                if (dist > max_distance_m) {
+                    dist = INFINITY;
+                }
+
+                printf("%3.3f\n", dist);
             }
 
             void dump()
