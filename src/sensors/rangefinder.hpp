@@ -64,7 +64,9 @@ namespace simsens {
                 dbg_endpoint.z = -1;
             }
 
-            printf("%3.3f\n", dist);
+            dump();
+
+            //printf("%3.3f\n", dist);
         }
 
         void dump()
@@ -77,6 +79,8 @@ namespace simsens {
             printf("  max range: %d mm\n", max_distance_mm);
             printf("  translation: x=%+3.3fm y=%+3.3fm z=%+3.3fm\n",
                     translation.x, translation.y, translation.z);
+            printf("  angles: phi=%+3.3frad theta=%+3.3frad psi=%+3.3frad\n",
+                    angles.x, angles.y, angles.z);
             printf("\n");
         }
 
@@ -90,7 +94,7 @@ namespace simsens {
         int max_distance_mm;
         double field_of_view_radians;
         vec3_t translation;
-        vec4_t rotation;
+        vec3_t angles;
 
         static double distance_to_wall(
                 const vec2_t beam_start,

@@ -22,12 +22,15 @@
 
 namespace simsens {
 
-    void rotvec2euler(
-            const double w, const double x, const double y, const double z,
-            double & phi, double & theta, double & psi)
+    void rotvec2euler(const vec4_t & vec, vec3_t & angles)
     {
-        phi = atan2(2*(w*z+x*y), 1 - 2*(y*y+z*z));
-        theta = asin(2*(w*y-z*x));
-        psi = atan2(2*(w*x+y*z), 1 - 2*(x*x+y*y));
+        const auto w = vec.w;
+        const auto x = vec.x;
+        const auto y = vec.y;
+        const auto z = vec.z;
+
+        angles.x = atan2(2*(w*z+x*y), 1 - 2*(y*y+z*z));
+        angles.y = asin(2*(w*y-z*x));
+        angles.z = atan2(2*(w*x+y*z), 1 - 2*(x*x+y*y));
     }
 };
