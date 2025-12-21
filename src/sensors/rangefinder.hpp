@@ -58,12 +58,11 @@ namespace simsens {
 
                 // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
                 const auto denom = (x1-x2) * (y3-y4) - (y1-y2) * (x3-x4);
-                if (!eqz(denom)) {
+                if (!iszero(denom)) {
                     const auto px = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4)) / denom;
                     const auto py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) / denom;
 
                     if (ge(px, x3) && le(px, x4) && ge(py, y4) && le(py, y3)) {
-
                         const double dist = l2dist(x1, y1, px, py);
                         if (dist < dist_min) {
                             endpoint.x = px;
@@ -107,15 +106,15 @@ namespace simsens {
 
         static bool ge(const double a, const double b)
         {
-            return eqz(a-b) || a > b;
+            return iszero(a-b) || a > b;
         }
 
         static bool le(const double a, const double b)
         {
-            return eqz(a-b) || b > a;
+            return iszero(a-b) || b > a;
         }
 
-        static bool eqz(const double x)
+        static bool iszero(const double x)
         {
             return fabs(x) < 0.001; // mm precision
         }
