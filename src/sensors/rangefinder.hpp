@@ -40,6 +40,7 @@ namespace simsens {
             const auto y2 = robot_pose.y - sin(robot_pose.psi) * max_distance_m;
 
             endpoint.z = -1;
+            double dist_min = INFINITY;
 
             for (auto wall : walls) {
 
@@ -60,10 +61,16 @@ namespace simsens {
                 if (!eqz(denom)) {
                     const auto px = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4)) / denom;
                     const auto py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) / denom;
+
                     if (ge(px, x3) && le(px, x4) && ge(py, y4) && le(py, y3)) {
-                        endpoint.x = px;
-                        endpoint.y = py;
-                        endpoint.z = robot_pose.z;
+
+                        const double dist = l2dist(x1, y1, px, py);
+                        if (dist < dist_min) {
+                            endpoint.x = px;
+                            endpoint.y = py;
+                            endpoint.z = robot_pose.z;
+                            dist_min = dist;
+                        }
                     }
                 }
 
@@ -98,21 +105,27 @@ namespace simsens {
         int max_distance_mm;
         double field_of_view_radians;
 
-        bool ge(const double a, const double b)
+        static bool ge(const double a, const double b)
         {
             return eqz(a-b) || a > b;
         }
 
-        bool le(const double a, const double b)
+        static bool le(const double a, const double b)
         {
             return eqz(a-b) || b > a;
         }
 
-        bool eqz(const double x)
+        static bool eqz(const double x)
         {
             return fabs(x) < 0.001; // mm precision
         }
 
+        static double l2dist(double x1, double y1, double x2, double y2)
+        {
+            const auto xd = (x1 - x2);
+            const auto yd = (y1 - y2);
+            return xd*xd + yd*yd;
+        }
     };
 
 }
