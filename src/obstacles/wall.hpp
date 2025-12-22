@@ -29,7 +29,7 @@ namespace simsens {
         public:
 
             vec3_t translation;
-            vec4_t rotation;
+            rotation_t rotation;
             vec3_t size;
 
             Wall()

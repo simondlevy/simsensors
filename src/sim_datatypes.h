@@ -45,5 +45,5 @@ namespace simsens {
         double x;
         double y;
         double z;
-    } vec4_t;
+    } rotation_t;
 };

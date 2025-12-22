@@ -73,7 +73,7 @@ namespace simsens {
             }
 
             static bool try_parse_vec4(const string line, const string field_name,
-                    vec4_t & vec) 
+                    rotation_t & vec) 
             {
                 if (string_contains(line, field_name)) {
                     const auto toks = split_string(line, ' ');
