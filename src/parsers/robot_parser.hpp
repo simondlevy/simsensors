@@ -69,11 +69,8 @@ namespace simsens {
                             ParserUtils::try_parse_vec3(line, "translation",
                                     rangefinder->translation);
 
-                            rotation_t rotation = {};
-                            if (ParserUtils::try_parse_rotation(line, "rotation",
-                                        rotation)) {
-                                //rotvec2euler(rotation, rangefinder->angles);
-                            }
+                            ParserUtils::try_parse_rotation(line, "rotation",
+                                        rangefinder->rotation);
 
                             if (ParserUtils::string_contains(line, "}") ||
                                     ParserUtils::string_contains(line, "children")) {

@@ -34,11 +34,16 @@ namespace simsens {
         {
             (void)distances_mm;
 
+            // Get rangefinder position and orientation and w.r.t. vehicle
+            vec3_t rangefinder_angles= {};
+            rotation_to_euler(rotation, rangefinder_angles);
+            const auto psi = robot_pose.psi + rangefinder_angles.z;
+
             // Get rangefinder beam endpoints
             const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
             const simsens::vec2_t beam_end = {
-                beam_start.x + cos(robot_pose.psi) * max_distance_m,
-                beam_start.y - sin(robot_pose.psi) * max_distance_m
+                beam_start.x + cos(psi) * max_distance_m,
+                beam_start.y - sin(psi) * max_distance_m
             };
 
             dbg_endpoint.z = -1;
