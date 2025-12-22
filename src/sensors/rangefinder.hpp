@@ -39,8 +39,13 @@ namespace simsens {
             rotation_to_euler(rotation, rangefinder_angles);
             const auto psi = robot_pose.psi + rangefinder_angles.z;
 
-            // Get rangefinder beam endpoints
-            const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
+            // Calculate beam startpoint
+            const simsens::vec2_t beam_start = {
+                robot_pose.x + this->translation.x,
+                robot_pose.y + this->translation.y
+            };
+
+            // Calculate beam endpoint
             const simsens::vec2_t beam_end = {
                 beam_start.x + cos(psi) * max_distance_m,
                 beam_start.y - sin(psi) * max_distance_m
@@ -68,7 +73,7 @@ namespace simsens {
                 dbg_endpoint.z = -1;
             }
 
-            //printf("dist=%3.3fm\n", dist);
+            printf("dist=%3.3fm\n", dist);
         }
 
         void dump()
@@ -131,10 +136,13 @@ namespace simsens {
                 if (ge(px, x3) && le(px, x4) && ge(py, y4) && le(py, y3)) {
                     dbg_endpoint.x = px;
                     dbg_endpoint.y = py;
-                    return eucdist(x1, y1, px, py);
+
+                    // Account for wall thickness
+                    return eucdist(x1, y1, px, py) - wall.size.x / 2; 
                 }
             }
 
+            // No intersection found
             return INFINITY;
         }
 
