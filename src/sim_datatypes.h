@@ -46,4 +46,11 @@ namespace simsens {
         double y;
         double z;
     } rotation_t;
+
+    typedef struct {
+        double x;
+        double y;
+        double z;
+        double alpha;
+    } newrotation_t;
 };

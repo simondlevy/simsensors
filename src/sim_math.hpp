@@ -22,4 +22,45 @@
 
 namespace simsens {
 
+    // https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToEuler/index.htm
+    void rotation2euler(const newrotation_t & rotation, vec3_t & angles)
+    {
+        static constexpr double TOL = 2e-3;
+
+        const auto x = rotation.x;
+        const auto y = rotation.y;
+        const auto z = rotation.z;
+        const auto alpha = rotation.alpha;
+
+        const auto s = sin(alpha);
+        const auto c = cos(alpha);
+        const auto t = 1 - c;
+
+        //  if axis is not already normalised then uncomment this
+        // magnitude = sqrt(x*x + y*y + z*z)
+        // if (magnitude==0) throw error
+        // x /= magnitude
+        // y /= magnitude
+        // z /= magnitude
+
+        const auto sing = x*y*t + z*s;
+
+        if (sing > (1-TOL)) { // north pole singularity detected
+            angles.x = 0;
+            angles.y = 2*atan2(x*sin(alpha/2),cos(alpha/2));
+            angles.z = M_PI/2;
+        }
+
+        else if (sing < -(1-TOL)) { // south pole singularity detected
+            angles.x = 0;
+            angles.y = -2*atan2(x*sin(alpha/2),cos(alpha/2));
+            angles.z = -M_PI/2;
+        }
+
+        else {
+            angles.x = atan2(x * s - y * z * t , 1 - (x*x + z*z) * t);
+            angles.y = atan2(y * s- x * z * t , 1 - (y*y+ z*z ) * t);
+            angles.z = asin(x * y * t + z * s);
+        }
+    }
 };
