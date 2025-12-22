@@ -35,7 +35,6 @@ namespace simsens {
             (void)distances_mm;
 
             // Get rangefinder beam endpoints
-            const double max_distance_m = this->max_distance_mm / 1000;
             const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
             const simsens::vec2_t beam_end = {
                 beam_start.x + cos(robot_pose.psi) * max_distance_m,
@@ -64,23 +63,21 @@ namespace simsens {
                 dbg_endpoint.z = -1;
             }
 
-            dump();
-
-            //printf("%3.3f\n", dist);
+            //printf("dist=%3.3fm\n", dist);
         }
 
         void dump()
         {
             printf("Rangefinder: \n");
-            printf("  fov: %3.3f rad\n", field_of_view_radians);
+            printf("  fov: %3.3fr\n", field_of_view_radians);
             printf("  width: %d\n", width);
             printf("  height: %d\n", height);
-            printf("  min range: %d mm\n", min_distance_mm);
-            printf("  max range: %d mm\n", max_distance_mm);
+            printf("  min range: %3.3fm\n", min_distance_m);
+            printf("  max range: %3.3fm\n", max_distance_m);
             printf("  translation: x=%+3.3fm y=%+3.3fm z=%+3.3fm\n",
                     translation.x, translation.y, translation.z);
-            printf("  angles: phi=%+3.3frad theta=%+3.3frad psi=%+3.3frad\n",
-                    angles.x, angles.y, angles.z);
+            printf("  rotation: x=%+3.3f y=%+3.3f z=%+3.3f alpha=%+3.3fr\n",
+                    rotation.x, rotation.y, rotation.z, rotation.alpha);
             printf("\n");
         }
 
@@ -90,11 +87,11 @@ namespace simsens {
 
         int width;
         int height; 
-        int min_distance_mm;
-        int max_distance_mm;
+        double min_distance_m;
+        double max_distance_m;
         double field_of_view_radians;
         vec3_t translation;
-        vec3_t angles;
+        rotation_t rotation;
 
         static double distance_to_wall(
                 const vec2_t beam_start,

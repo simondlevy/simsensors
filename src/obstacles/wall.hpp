@@ -43,16 +43,12 @@ namespace simsens {
             void dump()
             {
                 printf("Wall: \n");
-
-                printf("  translation: x=%+3.3f y=%+3.3f z=%+3.3f\n",
+                printf("  translation: x=%+3.3fm y=%+3.3fm z=%+3.3fm\n",
                         translation.x, translation.y, translation.z);
-
-                printf("  rotation: x=%+3.3f y=%+3.3f z=%+3.3f z=%+3.3f\n",
+                printf("  rotation: x=%+3.3f y=%+3.3f z=%+3.3f alpha=%+3.3fr\n",
                         rotation.x, rotation.y, rotation.z, rotation.alpha);
-
-                printf("  size: x=%3.3f y=%3.3f z=%3.3f\n",
+                printf("  size: x=%3.3fm y=%3.3fm z=%3.3fm\n",
                         size.x, size.y, size.z);
-
                 printf("\n");
             }
     };

@@ -50,8 +50,6 @@ namespace simsens {
 
                         if (rangefinder) {
 
-                            double tmp = 0;
-
                             ParserUtils::try_parse_double(line, "fieldOfView",
                                     rangefinder->field_of_view_radians);
 
@@ -61,27 +59,24 @@ namespace simsens {
                             ParserUtils::try_parse_int(line, "height",
                                     rangefinder->height);
 
-                            if (ParserUtils::try_parse_double(
-                                        line, "minRange", tmp)) {
-                                rangefinder->min_distance_mm = 1000 * tmp;
-                            }
-
-                            if (ParserUtils::try_parse_double(
-                                        line, "maxRange", tmp)) {
-                                rangefinder->max_distance_mm = 1000 * tmp;
-                            }
+                            ParserUtils::try_parse_double(
+                                    line, "minRange",
+                                    rangefinder->min_distance_m);
+                            ParserUtils::try_parse_double(
+                                    line, "maxRange", 
+                                    rangefinder->max_distance_m);
 
                             ParserUtils::try_parse_vec3(line, "translation",
                                     rangefinder->translation);
 
                             rotation_t rotation = {};
                             if (ParserUtils::try_parse_rotation(line, "rotation",
-                                    rotation)) {
+                                        rotation)) {
                                 //rotvec2euler(rotation, rangefinder->angles);
                             }
 
                             if (ParserUtils::string_contains(line, "}") ||
-                                ParserUtils::string_contains(line, "children")) {
+                                    ParserUtils::string_contains(line, "children")) {
                                 rangefinders.push_back(rangefinder);
                                 rangefinder = nullptr;
                             }

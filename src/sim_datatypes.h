@@ -40,6 +40,7 @@ namespace simsens {
         double psi;
     } pose_t;
 
+    // https://www.cyberbotics.com/doc/reference/transform?version=cyberbotics:R2019a-rev1
     typedef struct {
         double x;
         double y;
