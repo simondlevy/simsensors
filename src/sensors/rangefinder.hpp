@@ -30,10 +30,7 @@ namespace simsens {
         public:
 
         void read(const pose_t & robot_pose, const vector<Wall *> walls,
-                int * distances_mm,
-                vec3_t & dbg_beam_start,
-                vec3_t & dbg_beam_end,
-                vec3_t & dbg_intersection)
+                int * distances_mm, vec3_t & dbg_intersection)
         {
             (void)distances_mm;
 
@@ -54,14 +51,6 @@ namespace simsens {
                 beam_start.y - sin(psi) * max_distance_m
             };
 
-            dbg_beam_start.x = beam_start.x;
-            dbg_beam_start.y = beam_start.y;
-            dbg_beam_start.z = 1;
-
-            dbg_beam_end.x = beam_end.x;
-            dbg_beam_end.y = beam_end.y;
-            dbg_beam_end.z = 1;
-
             dbg_intersection.z = -1;
             double dist = INFINITY;
 
@@ -72,7 +61,6 @@ namespace simsens {
                         beam_start, beam_end, *wall, newdbg_intersection);
 
                 if (newdist < dist) {
-                    printf("  newdist=%+3.3f\n", newdist);
                     dbg_intersection.x = newdbg_intersection.x;
                     dbg_intersection.y = newdbg_intersection.y;
                     dbg_intersection.z = robot_pose.z;
@@ -154,11 +142,6 @@ namespace simsens {
 
                     const auto px = x1 + ua * (x2 - x1);
                     const auto py = y1 + ua * (y2 - y1);
-
-                    printf("bs=%+3.3f,%+3.3f be%+3.3f,%+3.3f ws=%+3.3f,%+3.3f we=%+3.3f,%+3.3f ",
-                            x1, y1, x2, y2, x3, y3, x4, y4);
-
-                    printf("p=%+3.3f,%+3.3f\n", px, py);
 
                     dbg_intersection.x = px;
                     dbg_intersection.y = py;
