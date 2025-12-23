@@ -30,7 +30,10 @@ namespace simsens {
         public:
 
         void read(const pose_t & robot_pose, const vector<Wall *> walls,
-                int * distances_mm, vec3_t & dbg_endpoint)
+                int * distances_mm,
+                vec3_t & dbg_beam_start,
+                vec3_t & dbg_beam_end,
+                vec3_t & dbg_intersection)
         {
             (void)distances_mm;
 
@@ -51,29 +54,38 @@ namespace simsens {
                 beam_start.y - sin(psi) * max_distance_m
             };
 
-            dbg_endpoint.z = -1;
+            dbg_beam_start.x = beam_start.x;
+            dbg_beam_start.y = beam_start.y;
+            dbg_beam_start.z = 1;
+
+            dbg_beam_end.x = beam_end.x;
+            dbg_beam_end.y = beam_end.y;
+            dbg_beam_end.z = 1;
+
+            dbg_intersection.z = -1;
             double dist = INFINITY;
 
             for (auto wall : walls) {
 
-                vec2_t newdbg_endpoint = {};
+                vec2_t newdbg_intersection = {};
                 const double newdist = distance_to_wall(
-                        beam_start, beam_end, *wall, newdbg_endpoint);
+                        beam_start, beam_end, *wall, newdbg_intersection);
 
                 if (newdist < dist) {
-                    dbg_endpoint.x = newdbg_endpoint.x;
-                    dbg_endpoint.y = newdbg_endpoint.y;
-                    dbg_endpoint.z = robot_pose.z;
+                    printf("  newdist=%+3.3f\n", newdist);
+                    dbg_intersection.x = newdbg_intersection.x;
+                    dbg_intersection.y = newdbg_intersection.y;
+                    dbg_intersection.z = robot_pose.z;
                     dist = newdist;
                 }
             }
 
             if (dist > max_distance_m) {
                 dist = INFINITY;
-                dbg_endpoint.z = -1;
+                dbg_intersection.z = -1;
             }
 
-            printf("dist=%3.3fm\n", dist);
+            printf("dist=%3.3fm -------------------\n", dist);
         }
 
         void dump()
@@ -107,10 +119,12 @@ namespace simsens {
                 const vec2_t beam_start,
                 const vec2_t beam_end,
                 const Wall & wall,
-                vec2_t & dbg_endpoint)
+                vec2_t & dbg_intersection)
         {
-            // Get wall dbg_endpoints
-            const auto psi = wall.rotation.alpha; // XXX should use rotvec2euler() conversion
+            // Get wall endpoints
+            vec3_t wall_angles = {};
+            rotation_to_euler(wall.rotation, wall_angles);
+            const auto psi = wall_angles.z;
             const auto len = wall.size.y / 2;
             const auto dx = len * sin(psi);
             const auto dy = len * cos(psi);
@@ -126,16 +140,28 @@ namespace simsens {
             const auto x2 = beam_end.x;
             const auto y2 = beam_end.y;
 
-            // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-            const auto denom = (x1-x2) * (y3-y4) - (y1-y2) * (x3-x4);
-            if (!iszero(denom)) {
-                const auto px = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4)) / denom;
-                const auto py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) / denom;
+            // https://gist.github.com/kylemcdonald/6132fc1c29fd3767691442ba4bc84018
+            const auto denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+            
+            if (denom != 0) {
 
-                // Ensure intersection point within wall bounds
-                if (ge(px, x3) && le(px, x4) && ge(py, y4) && le(py, y3)) {
-                    dbg_endpoint.x = px;
-                    dbg_endpoint.y = py;
+                const auto ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+                const auto ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+
+                // Check if intersection point lies within both line segments (0 <=
+                // ua <= 1 and 0 <= ub <= 1)
+                if (0 <= ua && ua <= 1 && 0 <= ub && ub <= 1) {
+
+                    const auto px = x1 + ua * (x2 - x1);
+                    const auto py = y1 + ua * (y2 - y1);
+
+                    printf("bs=%+3.3f,%+3.3f be%+3.3f,%+3.3f ws=%+3.3f,%+3.3f we=%+3.3f,%+3.3f ",
+                            x1, y1, x2, y2, x3, y3, x4, y4);
+
+                    printf("p=%+3.3f,%+3.3f\n", px, py);
+
+                    dbg_intersection.x = px;
+                    dbg_intersection.y = py;
 
                     // Account for wall thickness
                     return eucdist(x1, y1, px, py) - wall.size.x / 2; 
