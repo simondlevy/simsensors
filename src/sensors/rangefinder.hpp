@@ -33,35 +33,32 @@ namespace simsens {
                 int * distances_mm, vec3_t & dbg_intersection)
         {
             // Get rangefinder rotation w.r.t. vehicle
-            //vec3_t rangefinder_angles= {};
-            //rotation_to_euler(rotation, rangefinder_angles);
+            vec3_t rangefinder_angles= {};
+            rotation_to_euler(rotation, rangefinder_angles);
 
             // Use vehicle angles and rangefinder angle to get rangefinder
             // azimuth and elevation angles
-            const auto azi = robot_pose.psi;// + rangefinder_angles.z;
-            const auto ele = robot_pose.theta;// + rangefinder_angles.y;
+            const auto azi = robot_pose.psi + rangefinder_angles.z;
+            const auto ele = robot_pose.theta + rangefinder_angles.y;
 
             // Beam starts at robot coordinates
-            const simsens::vec3_t beam_start = {
-                robot_pose.x, 
-                robot_pose.y,
-                robot_pose.z
-            };
+            const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
 
             // Calculate beam endpoint
-            const simsens::vec3_t beam_end = {
+            const simsens::vec2_t beam_end = {
                 beam_start.x + cos(azi) * max_distance_m,
                 beam_start.y - sin(azi) * max_distance_m,
-                beam_start.z - tan(ele) * max_distance_m
             };
 
+            // Run a classic calculate-min loop to get distance to closest wall
             double dist = INFINITY;
             vec3_t intersection = {};
-
             for (auto wall : walls) {
-                intersect_with_wall(beam_start, beam_end, *wall, dist, intersection);
+                intersect_with_wall( beam_start, beam_end, robot_pose.z, ele,
+                        *wall, dist, intersection);
             }
 
+            // Cut off distance at rangefinder's maximum
             if (dist > max_distance_m) {
                 dist = INFINITY;
                 intersection.z = -1;
@@ -113,36 +110,51 @@ namespace simsens {
         rotation_t rotation;
 
         static void intersect_with_wall(
-                const vec3_t beam_start,
-                const vec3_t beam_end,
+                const vec2_t beam_start_xy,
+                const vec2_t beam_end_xy,
+                const double robot_z,
+                const double elevation,
                 const Wall & wall,
                 double & dist,
                 vec3_t & intersection)
         {
             // Get wall endpoints
-            const auto psi = wall.rotation.alpha; // rotation always 0 0 1 alpha
+            const auto psi = wall.rotation.alpha; // rot.  always 0 0 1 alpha
             const auto len = wall.size.y / 2;
             const auto dx = len * sin(psi);
             const auto dy = len * cos(psi);
             const auto tx = wall.translation.x;
             const auto ty = wall.translation.y;
 
+            // If beam ((x1,y1),(x2,y2)) intersects with with wall
+            // ((x3,y3),(x4,y4)) 
             double px=0, py=0;
-
-            if (beam_end.z < wall.size.z && 
-                    line_segments_intersect(
-                        beam_start.x, beam_start.y,
-                        beam_end.x, beam_end.y,
+            if (line_segments_intersect(
+                        beam_start_xy.x, beam_start_xy.y,
+                        beam_end_xy.x, beam_end_xy.y,
                         tx + dx, ty + dy,
                         tx - dx, ty - dy,
                         px, py)) {
 
-                const auto newdist = sqr(beam_start.x - px) + sqr(beam_start.y - py);
+                // Use intersection (px,py) to calculate XY distance to wall
+                const auto xydist =
+                    sqr(beam_start_xy.x - px) + sqr(beam_start_xy.y - py);
 
-                if (newdist < dist) {
+                // Use XY distance and robot Z to calculate the elevation Z on
+                // wall
+                (void)robot_z;
+                (void)elevation;
+
+                // Calculate XYZ distance by including elevation
+                const auto xyzdist = xydist;
+
+
+                // If XYZ distance is shorter than current, update current
+                if (xyzdist < dist) {
                     intersection.x = px;
                     intersection.y = py;
-                    dist = newdist;
+                    intersection.z = robot_z;
+                    dist = xyzdist;
                 }
             }
         }
