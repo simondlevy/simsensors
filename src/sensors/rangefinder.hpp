@@ -73,6 +73,7 @@ namespace simsens {
                 dbg_intersection.z = -1;
             }
 
+            // Subtract sensor offset from distance
             dist -= sqrtl2(this->translation.x, this->translation.y);
 
             printf("dist=%3.3f\n", dist);
@@ -130,7 +131,30 @@ namespace simsens {
             const auto x2 = beam_end.x;
             const auto y2 = beam_end.y;
 
-            // https://gist.github.com/kylemcdonald/6132fc1c29fd3767691442ba4bc84018
+            double px=0, py=0;
+
+            if (line_segments_intersect(x1, y1, x2, y2, x3, y3, x4, y4,
+                        px, py))
+            {
+                    dbg_intersection.x = px;
+                    dbg_intersection.y = py;
+
+                    // Account for wall thickness, sensor offset
+                    return eucdist(x1, y1, px, py) - wall.size.x / 2;
+            }
+
+            // No intersection found
+            return INFINITY;
+        }
+
+        // https://gist.github.com/kylemcdonald/6132fc1c29fd3767691442ba4bc84018
+        static bool line_segments_intersect(
+                const double x1, const double y1,
+                const double x2, const double y2,
+                const double x3, const double y3,
+                const double x4, const double y4,
+                double & px, double & py)
+        {
             const auto denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
             
             if (denom != 0) {
@@ -142,20 +166,16 @@ namespace simsens {
                 // ua <= 1 and 0 <= ub <= 1)
                 if (0 <= ua && ua <= 1 && 0 <= ub && ub <= 1) {
 
-                    const auto px = x1 + ua * (x2 - x1);
-                    const auto py = y1 + ua * (y2 - y1);
+                    px = x1 + ua * (x2 - x1);
+                    py = y1 + ua * (y2 - y1);
 
-                    dbg_intersection.x = px;
-                    dbg_intersection.y = py;
-
-                    // Account for wall thickness, sensor offset
-                    return eucdist(x1, y1, px, py) - wall.size.x / 2;
+                    return true;
                 }
             }
 
-            // No intersection found
-            return INFINITY;
+            return false;
         }
+
 
         static bool ge(const double a, const double b)
         {
