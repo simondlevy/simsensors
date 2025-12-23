@@ -32,12 +32,14 @@ namespace simsens {
         void read(const pose_t & robot_pose, const vector<Wall *> walls,
                 int * distances_mm, vec3_t & dbg_intersection)
         {
-            (void)distances_mm;
+            // Get rangefinder rotation w.r.t. vehicle
+            //vec3_t rangefinder_angles= {};
+            //rotation_to_euler(rotation, rangefinder_angles);
 
-            // Get rangefinder position and orientation and w.r.t. vehicle
-            vec3_t rangefinder_angles= {};
-            rotation_to_euler(rotation, rangefinder_angles);
-            const auto psi = robot_pose.psi + rangefinder_angles.z;
+            // Use vehicle angles and rangefinder angle to get rangefinder
+            // azimuth and elevation angles
+            const auto azi = robot_pose.psi;// + rangefinder_angles.z;
+            const auto ele = robot_pose.theta;// + rangefinder_angles.y;
 
             // Beam starts at robot coordinates
             const simsens::vec3_t beam_start = {
@@ -48,37 +50,39 @@ namespace simsens {
 
             // Calculate beam endpoint
             const simsens::vec3_t beam_end = {
-                beam_start.x + cos(psi) * max_distance_m,
-                beam_start.y - sin(psi) * max_distance_m,
-                beam_start.z // XXX
+                beam_start.x + cos(azi) * max_distance_m,
+                beam_start.y - sin(azi) * max_distance_m,
+                beam_start.z - tan(ele) * max_distance_m
             };
 
-            dbg_intersection.z = -1;
             double dist = INFINITY;
+            vec3_t intersection = {};
 
             for (auto wall : walls) {
-
-                vec2_t newdbg_intersection = {};
-                const double newdist = distance_to_wall(
-                        beam_start, beam_end, *wall, newdbg_intersection);
-
-                if (newdist < dist) {
-                    dbg_intersection.x = newdbg_intersection.x;
-                    dbg_intersection.y = newdbg_intersection.y;
-                    dbg_intersection.z = robot_pose.z;
-                    dist = newdist;
-                }
+                intersect_with_wall(beam_start, beam_end, *wall, dist, intersection);
             }
 
             if (dist > max_distance_m) {
                 dist = INFINITY;
-                dbg_intersection.z = -1;
+                intersection.z = -1;
             }
 
-            // Subtract sensor offset from distance
-            dist -= sqrtl2(this->translation.x, this->translation.y);
+            dist = sqrt(dist);
 
-            printf("dist=%3.3f\n", dist);
+            // Subtract sensor offset from distance
+            dist -= sqrt(
+                    sqr(this->translation.x) +
+                    sqr(this->translation.y) +
+                    sqr(this->translation.z));
+
+            //printf("dist=%3.3f\n", dist);
+            printf("phi=%+3.3f the=%+3.3f psi=%+3.3f ele=%+3.3f | dist=%3.3f\n",
+                    robot_pose.phi, robot_pose.theta, robot_pose.psi, ele, dist);
+
+            // Use just one distance for now
+            distances_mm[0] = dist * 1000; // m => mm
+
+            memcpy(&dbg_intersection, &intersection, sizeof(vec3_t));
         }
 
         void dump()
@@ -108,11 +112,12 @@ namespace simsens {
         vec3_t translation;
         rotation_t rotation;
 
-        static double distance_to_wall(
+        static void intersect_with_wall(
                 const vec3_t beam_start,
                 const vec3_t beam_end,
                 const Wall & wall,
-                vec2_t & dbg_intersection)
+                double & dist,
+                vec3_t & intersection)
         {
             // Get wall endpoints
             const auto psi = wall.rotation.alpha; // rotation always 0 0 1 alpha
@@ -130,17 +135,16 @@ namespace simsens {
                         beam_end.x, beam_end.y,
                         tx + dx, ty + dy,
                         tx - dx, ty - dy,
-                        px, py))
-            {
-                dbg_intersection.x = px;
-                dbg_intersection.y = py;
+                        px, py)) {
 
-                return eucdist(beam_start.x, beam_start.y, px, py) -
-                    wall.size.x / 2; // account for wall thickness
+                const auto newdist = sqr(beam_start.x - px) + sqr(beam_start.y - py);
+
+                if (newdist < dist) {
+                    intersection.x = px;
+                    intersection.y = py;
+                    dist = newdist;
+                }
             }
-
-            // No intersection found
-            return INFINITY;
         }
 
         // https://gist.github.com/kylemcdonald/6132fc1c29fd3767691442ba4bc84018
@@ -188,17 +192,9 @@ namespace simsens {
             return fabs(x) < 0.001; // mm precision
         }
 
-        static double eucdist(double x1, double y1, double x2, double y2)
+        static double sqr(const double x)
         {
-            const auto xd = (x1 - x2);
-            const auto yd = (y1 - y2);
-            return sqrtl2(xd, yd);
-        }
-
-        static double sqrtl2(const double a, const double b)
-        {
-            return sqrt(a*a + b*b);
+            return x * x;
         }
     };
-
 }
