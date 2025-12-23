@@ -38,24 +38,24 @@ namespace simsens {
 
             // Use vehicle angles and rangefinder angle to get rangefinder
             // azimuth and elevation angles
-            const auto azi = robot_pose.psi + rangefinder_angles.z;
-            const auto ele = robot_pose.theta + rangefinder_angles.y;
+            const auto azimuth_angle = robot_pose.psi + rangefinder_angles.z;
+            const auto elevation_angle = robot_pose.theta + rangefinder_angles.y;
 
             // Beam starts at robot coordinates
             const simsens::vec2_t beam_start = {robot_pose.x, robot_pose.y};
 
             // Calculate beam endpoint
             const simsens::vec2_t beam_end = {
-                beam_start.x + cos(azi) * max_distance_m,
-                beam_start.y - sin(azi) * max_distance_m,
+                beam_start.x + cos(azimuth_angle) * max_distance_m,
+                beam_start.y - sin(azimuth_angle) * max_distance_m,
             };
 
             // Run a classic calculate-min loop to get distance to closest wall
             double dist = INFINITY;
             vec3_t intersection = {};
             for (auto wall : walls) {
-                intersect_with_wall( beam_start, beam_end, robot_pose.z, ele,
-                        *wall, dist, intersection);
+                intersect_with_wall(beam_start, beam_end, robot_pose.z,
+                        elevation_angle, *wall, dist, intersection);
             }
 
             // Cut off distance at rangefinder's maximum
@@ -64,17 +64,11 @@ namespace simsens {
                 intersection.z = -1;
             }
 
-            dist = sqrt(dist);
-
             // Subtract sensor offset from distance
             dist -= sqrt(
                     sqr(this->translation.x) +
                     sqr(this->translation.y) +
                     sqr(this->translation.z));
-
-            //printf("dist=%3.3f\n", dist);
-            printf("phi=%+3.3f the=%+3.3f psi=%+3.3f ele=%+3.3f | dist=%3.3f\n",
-                    robot_pose.phi, robot_pose.theta, robot_pose.psi, ele, dist);
 
             // Use just one distance for now
             distances_mm[0] = dist * 1000; // m => mm
@@ -113,9 +107,9 @@ namespace simsens {
                 const vec2_t beam_start_xy,
                 const vec2_t beam_end_xy,
                 const double robot_z,
-                const double elevation,
+                const double elevation_angle,
                 const Wall & wall,
-                double & dist,
+                double & mindist,
                 vec3_t & intersection)
         {
             // Get wall endpoints
@@ -136,25 +130,24 @@ namespace simsens {
                         tx - dx, ty - dy,
                         px, py)) {
 
-                // Use intersection (px,py) to calculate XY distance to wall
-                const auto xydist =
-                    sqr(beam_start_xy.x - px) + sqr(beam_start_xy.y - py);
-
-                // Use XY distance and robot Z to calculate the elevation Z on
+                // Use intersection (px,py) to calculate squared XY distance to
                 // wall
-                (void)robot_z;
-                (void)elevation;
+                const auto xydist =
+                    sqrt(sqr(beam_start_xy.x - px) + sqr(beam_start_xy.y - py));
 
-                // Calculate XYZ distance by including elevation
-                const auto xyzdist = xydist;
+                // Use squared XY distance, robot Z, and elevation angle to
+                // calculate Z offset of intersection on wall w.r.t. robot Z
+                const auto dz = tan(elevation_angle) * xydist;
 
+                // Calculate XYZ distance by including Z offset
+                const auto xyzdist = xydist + sqr(dz);
 
                 // If XYZ distance is shorter than current, update current
-                if (xyzdist < dist) {
+                if (xyzdist < mindist) {
                     intersection.x = px;
                     intersection.y = py;
-                    intersection.z = robot_z;
-                    dist = xyzdist;
+                    intersection.z = robot_z + dz;
+                    mindist = xyzdist;
                 }
             }
         }
