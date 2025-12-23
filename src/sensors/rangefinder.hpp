@@ -58,18 +58,15 @@ namespace simsens {
 
             for (auto wall : walls) {
 
-                if (robot_pose.z < wall->size.z) { // XXX should use beam Z instead of robot Z
+                vec2_t newdbg_intersection = {};
+                const double newdist = distance_to_wall(
+                        beam_start, beam_end, *wall, newdbg_intersection);
 
-                    vec2_t newdbg_intersection = {};
-                    const double newdist = distance_to_wall(
-                            beam_start, beam_end, *wall, newdbg_intersection);
-
-                    if (newdist < dist) {
-                        dbg_intersection.x = newdbg_intersection.x;
-                        dbg_intersection.y = newdbg_intersection.y;
-                        dbg_intersection.z = robot_pose.z;
-                        dist = newdist;
-                    }
+                if (newdist < dist) {
+                    dbg_intersection.x = newdbg_intersection.x;
+                    dbg_intersection.y = newdbg_intersection.y;
+                    dbg_intersection.z = robot_pose.z;
+                    dist = newdist;
                 }
             }
 
@@ -127,7 +124,8 @@ namespace simsens {
 
             double px=0, py=0;
 
-            if (line_segments_intersect(
+            if (beam_end.z < wall.size.z && 
+                    line_segments_intersect(
                         beam_start.x, beam_start.y,
                         beam_end.x, beam_end.y,
                         tx + dx, ty + dy,
@@ -154,7 +152,7 @@ namespace simsens {
                 double & px, double & py)
         {
             const auto denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-            
+
             if (denom != 0) {
 
                 const auto ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
