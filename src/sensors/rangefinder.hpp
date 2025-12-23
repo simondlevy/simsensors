@@ -40,15 +40,17 @@ namespace simsens {
             const auto psi = robot_pose.psi + rangefinder_angles.z;
 
             // Beam starts at robot coordinates
-            const simsens::vec2_t beam_start = {
+            const simsens::vec3_t beam_start = {
                 robot_pose.x, 
-                robot_pose.y
+                robot_pose.y,
+                robot_pose.z
             };
 
             // Calculate beam endpoint
-            const simsens::vec2_t beam_end = {
+            const simsens::vec3_t beam_end = {
                 beam_start.x + cos(psi) * max_distance_m,
-                beam_start.y - sin(psi) * max_distance_m
+                beam_start.y - sin(psi) * max_distance_m,
+                beam_start.z // XXX
             };
 
             dbg_intersection.z = -1;
@@ -110,8 +112,8 @@ namespace simsens {
         rotation_t rotation;
 
         static double distance_to_wall(
-                const vec2_t beam_start,
-                const vec2_t beam_end,
+                const vec3_t beam_start,
+                const vec3_t beam_end,
                 const Wall & wall,
                 vec2_t & dbg_intersection)
         {
