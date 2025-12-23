@@ -130,17 +130,17 @@ namespace simsens {
                         tx - dx, ty - dy,
                         px, py)) {
 
-                // Use intersection (px,py) to calculate squared XY distance to
-                // wall
-                const auto xydist =
-                    sqrt(sqr(beam_start_xy.x - px) + sqr(beam_start_xy.y - py));
+                // Use intersection (px,py) to calculate XY distance to wall
+                const auto dx = beam_start_xy.x - px;
+                const auto dy = beam_start_xy.y - py;
+                const auto xydist = sqrt(dx*dx + dy*dy);
 
-                // Use squared XY distance, robot Z, and elevation angle to
-                // calculate Z offset of intersection on wall w.r.t. robot Z
+                // Use XY distance, robot Z, and elevation angle to calculate Z
+                // offset of intersection on wall w.r.t. robot Z
                 const auto dz = tan(elevation_angle) * xydist;
 
                 // Calculate XYZ distance by including Z offset
-                const auto xyzdist = xydist + sqr(dz);
+                const auto xyzdist = sqrt(dx*dx + dy*dy + dz*dz);
 
                 // If XYZ distance is shorter than current, update current
                 if (xyzdist < mindist) {
