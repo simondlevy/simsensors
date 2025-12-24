@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 
-#include <simsensors/src/parsers/utils.hpp>
+#include <simsensors/src/parsers/webots/utils.hpp>
 #include <simsensors/src/sensors/rangefinder.hpp>
 #include <simsensors/src/math.hpp>
 

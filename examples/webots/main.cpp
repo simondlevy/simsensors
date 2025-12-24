@@ -18,8 +18,8 @@
 
 #include <stdio.h>
 
-#include <simsensors/src/parsers/world.hpp>
-#include <simsensors/src/parsers/robot.hpp>
+#include <simsensors/src/parsers/webots/world.hpp>
+#include <simsensors/src/parsers/webots/robot.hpp>
 
 int main(int argc, char ** argv) 
 {
