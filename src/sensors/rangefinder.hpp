@@ -76,7 +76,9 @@ namespace simsens {
                     fprintf(logfp, "%d\n", distances_mm[0]);
                 }
                 if (dbg_intersection) {
-                    memcpy(dbg_intersection, &intersection, sizeof(vec3_t));
+                    dbg_intersection->x = intersection.x;
+                    dbg_intersection->y = intersection.y;
+                    dbg_intersection->z = intersection.z;
                 }
 
             }
