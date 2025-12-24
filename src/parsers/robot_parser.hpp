@@ -22,7 +22,7 @@
 
 #include <parsers/utils.hpp>
 #include <sensors/rangefinder.hpp>
-#include <sim_math.hpp>
+#include <ssmath.hpp>
 
 namespace simsens {
 
