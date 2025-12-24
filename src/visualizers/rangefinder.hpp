@@ -20,7 +20,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <sensors/rangefinder.hpp>
+#include <simsensors/src/sensors/rangefinder.hpp>
 
 namespace simsens {
 

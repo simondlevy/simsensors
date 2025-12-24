@@ -20,9 +20,9 @@
 
 #include <stdio.h>
 
-#include <parsers/utils.hpp>
-#include <sensors/rangefinder.hpp>
-#include <ssmath.hpp>
+#include <simsensors/src/parsers/utils.hpp>
+#include <simsensors/src/sensors/rangefinder.hpp>
+#include <simsensors/src/math.hpp>
 
 namespace simsens {
 

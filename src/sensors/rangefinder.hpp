@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <ssmath.hpp>
+#include <simsensors/src/math.hpp>
 
 namespace simsens {
 

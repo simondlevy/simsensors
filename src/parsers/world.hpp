@@ -20,8 +20,8 @@
 
 #include <stdio.h>
 
-#include <parsers/utils.hpp>
-#include <obstacles/wall.hpp>
+#include <simsensors/src/parsers/utils.hpp>
+#include <simsensors/src/obstacles/wall.hpp>
 
 namespace simsens {
 

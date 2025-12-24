@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 
-#include <sstypes.h>
+#include <simsensors/src/types.h>
 
 namespace simsens {
 

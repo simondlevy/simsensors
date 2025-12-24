@@ -14,7 +14,7 @@
 
 CFLAGS = -O3 -std=c++11 -Wall -Wextra
 
-SRCDIR = ../../src
+ROOTDIR = ../../..
 
 HFDIR = $(HOME)/Desktop/hackflight/webots
 
@@ -29,7 +29,7 @@ $(EXE): $(EXE).o
 	g++ -o $(EXE) $(EXE).o
 
 $(EXE).o: $(EXE).cpp  $(SRCDIR)/*/*.*
-	g++ -c -I$(SRCDIR) $(EXE).cpp
+	g++ -c -I$(ROOTDIR) $(EXE).cpp
 
 clean:
 	rm -f $(EXE) *.o

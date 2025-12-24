@@ -21,9 +21,9 @@
 #include <vector>
 using namespace::std;
 
-#include <ssmath.hpp>
-#include <sstypes.h>
-#include <obstacles/wall.hpp>
+#include <simsensors/src/math.hpp>
+#include <simsensors/src/types.h>
+#include <simsensors/src/obstacles/wall.hpp>
 
 namespace simsens {
 
