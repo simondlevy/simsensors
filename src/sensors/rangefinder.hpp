@@ -76,7 +76,8 @@ namespace simsens {
                     const vector<Wall *> walls,
                     const int beam_index)
             {
-                printf("%+3.3f ", beam_index / (width - 1.) - 0.5);
+                const double s = beam_index / (width - 1.) - 0.5;
+                printf("%+3.3f:%+3.3f ", s, s * field_of_view_radians);
 
                 // Get rangefinder rotation w.r.t. vehicle
                 vec3_t rangefinder_angles= {};
