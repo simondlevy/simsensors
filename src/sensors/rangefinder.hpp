@@ -26,57 +26,19 @@ namespace simsens {
 
         public:
 
+
             void read(const pose_t & robot_pose, const vector<Wall *> walls,
                     int * distances_mm,
                     FILE * dbg_logfp=nullptr,
                     vec3_t * dbg_intersection=nullptr)
             {
+                (void)dbg_intersection;
+
                 for (int k=0; k<width; ++k) {
-                    //printf("%+3.3f ", (float)k/width - 0.5);
-                    printf("%+3.3f ", k / (width - 1.) - 0.5);
+                    distances_mm[k] = distance_on_beam(robot_pose, walls, k);
                 }
                 printf("\n");
 
-                // Get rangefinder rotation w.r.t. vehicle
-                vec3_t rangefinder_angles= {};
-                rotation_to_euler(rotation, rangefinder_angles);
-
-                // Run a classic calculate-min loop to get distance to closest wall
-                double dist = INFINITY;
-                vec3_t intersection = {};
-                for (auto wall : walls) {
-                    const auto newdist = intersect_with_wall(
-                                vec3_t{robot_pose.x, robot_pose.y, robot_pose.z},
-                                robot_pose.psi + rangefinder_angles.z, // azimuth
-                                robot_pose.theta + rangefinder_angles.y, // elevation
-                                *wall,
-                                &intersection);
-
-                    if (dbg_intersection!=nullptr && newdist < dist) {
-                        dbg_intersection->x = intersection.x;
-                        dbg_intersection->y = intersection.y;
-                        dbg_intersection->z = intersection.z;
-                    }
-
-                    dist = min(dist, newdist);
-                }
-
-                // Cut off distance at rangefinder's maximum
-                if (dist > max_distance_m) {
-                    dist = INFINITY;
-                    if (dbg_intersection!=nullptr) {
-                        dbg_intersection->z = -1;
-                    }
-                }
-
-                // Subtract sensor offset from distance
-                dist -= sqrt(
-                        sqr(this->translation.x) +
-                        sqr(this->translation.y) +
-                        sqr(this->translation.z));
-
-                // Use just one distance for now
-                distances_mm[0] = dist == INFINITY ? -1 : dist * 1000;
 
                 // Support logging
                 if (dbg_logfp) {
@@ -108,6 +70,55 @@ namespace simsens {
             double field_of_view_radians;
             vec3_t translation;
             rotation_t rotation;
+
+            int distance_on_beam(
+                    const pose_t & robot_pose,
+                    const vector<Wall *> walls,
+                    const int beam_index)
+            {
+                printf("%+3.3f ", beam_index / (width - 1.) - 0.5);
+
+                // Get rangefinder rotation w.r.t. vehicle
+                vec3_t rangefinder_angles= {};
+                rotation_to_euler(rotation, rangefinder_angles);
+
+                // Run a classic calculate-min loop to get distance to closest wall
+                double dist = INFINITY;
+                vec3_t intersection = {};
+                for (auto wall : walls) {
+                    const auto newdist = intersect_with_wall(
+                                vec3_t{robot_pose.x, robot_pose.y, robot_pose.z},
+                                robot_pose.psi + rangefinder_angles.z, // azimuth
+                                robot_pose.theta + rangefinder_angles.y, // elevation
+                                *wall,
+                                &intersection);
+
+                    /*
+                    if (dbg_intersection!=nullptr && newdist < dist) {
+                        dbg_intersection->x = intersection.x;
+                        dbg_intersection->y = intersection.y;
+                        dbg_intersection->z = intersection.z;
+                    }*/
+
+                    dist = min(dist, newdist);
+                }
+
+                // Cut off distance at rangefinder's maximum
+                if (dist > max_distance_m) {
+                    dist = INFINITY;
+                    //if (dbg_intersection!=nullptr) {
+                    //    dbg_intersection->z = -1;
+                    //}
+                }
+
+                // Subtract sensor offset from distance
+                dist -= sqrt(
+                        sqr(this->translation.x) +
+                        sqr(this->translation.y) +
+                        sqr(this->translation.z));
+
+                return dist == INFINITY ? -1 : dist * 1000;
+            }
 
             friend class RangefinderVisualizer;
             friend class RobotParser;
