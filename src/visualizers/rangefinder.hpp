@@ -69,7 +69,7 @@ namespace simsens {
                 const double dmax_m = this->rangefinder->max_distance_m;
 
                 return d_mm == -1 ? 255 : 
-                    (uint8_t)((d_mm/1000. - dmin_m) / (double)(dmax_m - dmin_m) * 255);
+                    (uint8_t)((d_mm/1000. - dmin_m) / (dmax_m - dmin_m) * 255);
             }
     };
 
