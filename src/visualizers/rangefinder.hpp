@@ -28,7 +28,7 @@ namespace simsens {
 
         public:
 
-            RangefinderVisualizer(SimRangefinder * rangefinder)
+            RangefinderVisualizer(Rangefinder * rangefinder)
             {
                 this->rangefinder = rangefinder;
             }
@@ -61,7 +61,7 @@ namespace simsens {
 
         private:
 
-            SimRangefinder * rangefinder;
+            Rangefinder * rangefinder;
 
             uint8_t distance_to_grayscale(const int d_mm)
             {

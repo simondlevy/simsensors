@@ -30,7 +30,7 @@ namespace simsens {
 
         public:
 
-            vector<SimRangefinder *> rangefinders;
+            vector<Rangefinder *> rangefinders;
 
             void parse(const string robot_file_name)
             {
@@ -40,12 +40,12 @@ namespace simsens {
 
                     string line;
 
-                    SimRangefinder * rangefinder = nullptr;
+                    Rangefinder * rangefinder = nullptr;
 
                     while (getline(file, line)) {
 
                         if (ParserUtils::string_contains(line, "RangeFinder {")) {
-                            rangefinder = new SimRangefinder();
+                            rangefinder = new Rangefinder();
                         }
 
                         if (rangefinder) {

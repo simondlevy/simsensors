@@ -22,7 +22,7 @@
 
 namespace simsens {
 
-    class SimRangefinder {
+    class Rangefinder {
 
         public:
 
