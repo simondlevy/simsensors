@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include <vector>
+using namespace std;
+
 #include <simsensors/src/math.hpp>
 
 namespace simsens {
