@@ -31,7 +31,9 @@ namespace simsens {
 
             vector<Wall *> walls;
 
-            void parse(const string world_file_name)
+            void parse(
+                    const string world_file_name,
+                    const string robot_name="")
             {
                 ifstream file(world_file_name);
 
@@ -61,6 +63,11 @@ namespace simsens {
                                 walls.push_back(_wall);
                                 _wall = nullptr;
                             }
+                        }
+
+                        if (robot_name.size() > 0 && 
+                                ParserUtils::string_contains(line, robot_name)) {
+                            printf(">>> %s <<<\n", line.c_str());
                         }
                     }
                 }
