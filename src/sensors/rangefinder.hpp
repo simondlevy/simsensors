@@ -41,7 +41,42 @@ namespace simsens {
 
                 for (int k=0; k<this->width; ++k) {
 
-                    distances_mm[k] = distance_on_beam(robpose, world.walls, k);
+                    // Get rangefinder rotation w.r.t. vehicle
+                    vec3_t rangefinder_angles= {};
+                    rotation_to_euler(rotation, rangefinder_angles);
+
+                    const double azimuth =
+                        robpose.psi + rangefinder_angles.z + 
+                        (k / (width - 1.) - 0.5) * field_of_view_radians;
+
+                    const double elevation = robpose.theta + rangefinder_angles.y; 
+
+                    const vec3_t location =
+                        vec3_t{robpose.x, robpose.y, robpose.z};
+
+                    // Run a classic calculate-min loop to get distance to closest wall
+                    double dist = INFINITY;
+                    vec3_t intersection = {};
+                    for (auto wall : world.walls) {
+                        const auto newdist = intersect_with_wall(
+                                location, azimuth, elevation, *wall,
+                                &intersection);
+
+                        dist = min(dist, newdist);
+                    }
+
+                    // Cut off distance at rangefinder's maximum
+                    if (dist > max_distance_m) {
+                        dist = INFINITY;
+                    }
+
+                    // Subtract sensor offset from distance
+                    dist -= sqrt(
+                            sqr(this->translation.x) +
+                            sqr(this->translation.y) +
+                            sqr(this->translation.z));
+
+                    distances_mm[k] = dist == INFINITY ? -1 : dist * 1000;
                 }
             }
 
@@ -67,52 +102,6 @@ namespace simsens {
             vec3_t translation;
             rotation_t rotation;
             char name[100];
-
-            int distance_on_beam(
-                    const pose_t & robot_pose,
-                    const vector<Wall *> walls,
-                    const int beam_index)
-            {
-                // Get rangefinder rotation w.r.t. vehicle
-                vec3_t rangefinder_angles= {};
-                rotation_to_euler(rotation, rangefinder_angles);
-
-                const double azimuth =
-                    robot_pose.psi + rangefinder_angles.z + 
-                    (beam_index / (width - 1.) - 0.5) * field_of_view_radians;
-
-                const double elevation = robot_pose.theta + rangefinder_angles.y; 
-
-                const vec3_t location =
-                    vec3_t{robot_pose.x, robot_pose.y, robot_pose.z};
-
-                // Run a classic calculate-min loop to get distance to closest wall
-                double dist = INFINITY;
-                vec3_t intersection = {};
-                for (auto wall : walls) {
-                    const auto newdist = intersect_with_wall(
-                            location, azimuth, elevation, *wall,
-                            &intersection);
-
-                    dist = min(dist, newdist);
-                }
-
-                // Cut off distance at rangefinder's maximum
-                if (dist > max_distance_m) {
-                    dist = INFINITY;
-                    //if (dbg_intersection!=nullptr) {
-                    //    dbg_intersection->z = -1;
-                    //}
-                }
-
-                // Subtract sensor offset from distance
-                dist -= sqrt(
-                        sqr(this->translation.x) +
-                        sqr(this->translation.y) +
-                        sqr(this->translation.z));
-
-                return dist == INFINITY ? -1 : dist * 1000;
-            }
 
             friend class RangefinderVisualizer;
             friend class RobotParser;
