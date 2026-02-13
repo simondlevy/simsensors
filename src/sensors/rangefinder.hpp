@@ -49,6 +49,12 @@ namespace simsens {
                         robpose.psi + rangefinder_angles.z + 
                         (k / (width - 1.) - 0.5) * field_of_view_radians;
 
+                    /*
+                    const double az =
+                        rangefinder_angles.z + 
+                        (k / (width - 1.) - 0.5) * field_of_view_radians;
+                    printf("k=%d azimuth=%+3.3f\n", k, az);*/
+
                     const double elevation = robpose.theta + rangefinder_angles.y; 
 
                     const vec3_t location =
@@ -78,6 +84,8 @@ namespace simsens {
 
                     distances_mm[k] = dist == INFINITY ? -1 : dist * 1000;
                 }
+
+                printf("\n");
             }
 
             void dump()
