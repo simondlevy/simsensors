@@ -47,13 +47,8 @@ namespace simsens {
 
                     const double azimuth =
                         robpose.psi + rangefinder_angles.z + 
-                        (k / (width - 1.) - 0.5) * field_of_view_radians;
-
-                    /*
-                    const double az =
-                        rangefinder_angles.z + 
-                        (k / (width - 1.) - 0.5) * field_of_view_radians;
-                    printf("k=%d azimuth=%+3.3f\n", k, az);*/
+                        (width == 1 ? 0 :
+                         (k / (width - 1.) - 0.5) * field_of_view_radians);
 
                     const double elevation = robpose.theta + rangefinder_angles.y; 
 
