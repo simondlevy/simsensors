@@ -26,10 +26,9 @@
 namespace simsens {
 
     // https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToEuler/index.htm
-    static void rotation_to_euler(const rotation_t & rotation, vec3_t & angles)
+    static void rotation_to_euler(const rotation_t & rotation, vec3_t & angles,
+            double TOL = 2e-2)
     {
-        static constexpr double TOL = 2e-3;
-
         const auto x = rotation.x;
         const auto y = rotation.y;
         const auto z = rotation.z;
@@ -39,32 +38,23 @@ namespace simsens {
         const auto c = cos(alpha);
         const auto t = 1 - c;
 
-        //  if axis is not already normalised then uncomment this
-        // magnitude = sqrt(x*x + y*y + z*z)
-        // if (magnitude==0) throw error
-        // x /= magnitude
-        // y /= magnitude
-        // z /= magnitude
-
-        const auto sing = x*y*t + z*s;
-
-        if (sing > (1-TOL)) { // north pole singularity detected
+        if ((x*y*t + z*s) > (1-TOL)) { // north pole singularity detected
+            angles.z = 2*atan2(x*sin(alpha/2),cos(alpha/2));
+            angles.y = M_PI/2;
             angles.x = 0;
-            angles.y = 2*atan2(x*sin(alpha/2),cos(alpha/2));
-            angles.z = M_PI/2;
+            return;
         }
 
-        else if (sing < -(1-TOL)) { // south pole singularity detected
+        if ((x*y*t + z*s) < -(1-TOL)) { // south pole singularity detected
+            angles.z = -2*atan2(x*sin(alpha/2),cos(alpha/2));
+            angles.y = -M_PI/2;
             angles.x = 0;
-            angles.y = -2*atan2(x*sin(alpha/2),cos(alpha/2));
-            angles.z = -M_PI/2;
+            return;
         }
 
-        else {
-            angles.x = atan2(x * s - y * z * t , 1 - (x*x + z*z) * t);
-            angles.y = atan2(y * s- x * z * t , 1 - (y*y+ z*z ) * t);
-            angles.z = asin(x * y * t + z * s);
-        }
+        angles.x = atan2(x * s - y * z * t , 1 - (x*x + z*z) * t);
+        angles.y = asin(x * y * t + z * s) ;
+        angles.z = atan2(y * s- x * z * t , 1 - (y*y+ z*z ) * t);
     }
 
     // https://gist.github.com/kylemcdonald/6132fc1c29fd3767691442ba4bc84018
