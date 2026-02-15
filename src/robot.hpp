@@ -19,6 +19,8 @@
 #pragma once
 
 #include <map>
+#include <string>
+using namespace std;
 
 #include <simsensors/src/sensors/rangefinder.hpp>
 
@@ -28,7 +30,7 @@ namespace simsens {
 
         public:
 
-            std::map<string, Rangefinder *> rangefinders;
+            map<string, Rangefinder *> rangefinders;
 
             void dump()
             {

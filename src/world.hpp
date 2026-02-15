@@ -18,6 +18,10 @@
 
 #pragma once
 
+#include <vector>
+using namespace std;
+
+#include <simsensors/src/math.hpp>
 #include <simsensors/src/obstacles/wall.hpp>
 
 namespace simsens {
