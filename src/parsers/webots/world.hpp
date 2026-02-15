@@ -130,8 +130,8 @@ namespace simsens {
                     vec3_t euler = {};
                     rotation_to_euler(rot, euler);
                     world.robotPose.phi = euler.x;
-                    world.robotPose.theta = euler.y;
-                    world.robotPose.psi = -euler.z;
+                    world.robotPose.theta = euler.z;
+                    world.robotPose.psi = -euler.y;
                 }
 
             }
