@@ -31,7 +31,7 @@ namespace simsens {
 
         public:
 
-            static void parse(const string robot_file_name, Robot & robot)
+            static bool parse(const string robot_file_name, Robot & robot)
             {
                 ifstream file(robot_file_name);
 
@@ -86,7 +86,10 @@ namespace simsens {
                 else {
                     fprintf(stderr, "Unable to open file %s for input\n",
                             robot_file_name.c_str());
+                    return false;
                 }
+
+                return true;
             }
     };
 

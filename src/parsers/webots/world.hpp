@@ -31,7 +31,7 @@ namespace simsens {
 
         public:
 
-            static void parse(
+            static bool parse(
                     const string world_file_name,
                     World & world,
                     const string robot_path="")
@@ -90,7 +90,10 @@ namespace simsens {
                 else {
                     fprintf(stderr, "Unable to open file %s for input\n",
                             world_file_name.c_str());
+                    return false;
                 }
+
+                return true;
             }
 
         private:
