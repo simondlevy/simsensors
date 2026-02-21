@@ -75,6 +75,13 @@ namespace simsens {
 
          public:
 
+            ~World()
+            {
+                for (auto wall : walls) {
+                    delete wall;
+                }
+            }
+
             bool collided(
                     const vec3_t & robot_location, const bool debug=false)
             {

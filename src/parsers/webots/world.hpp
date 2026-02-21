@@ -36,6 +36,8 @@ namespace simsens {
                     World & world,
                     const string robot_path="")
             {
+                (void)world;
+
                 ifstream file(world_file_name);
 
                 if (file.is_open()) {

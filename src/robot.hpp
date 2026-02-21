@@ -32,6 +32,13 @@ namespace simsens {
 
             map<string, Rangefinder *> rangefinders;
 
+            ~Robot()
+            {
+                for (auto rangefinder : rangefinders) {
+                    delete rangefinder.second;
+                }
+            }
+
             void dump()
             {
                 for (auto rangefinder : rangefinders) {
