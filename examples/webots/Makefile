@@ -12,7 +12,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program. If not, see <http:--www.gnu.org/licenses/>.
 
-CFLAGS = -O3 -std=c++17 -Wall -Wextra # -fsanitize=address
+C++ = g++
+
+CFLAGS = -O3 -std=c++17 -Wall -Wextra
 
 ROOTDIR = ../../..
 
@@ -28,10 +30,10 @@ run: $(EXE)
 	./$(EXE) $(DATADIR)/twoexit.wbt $(DATADIR)/DiyQuad.proto 
 
 $(EXE): $(EXE).o
-	g++ $(CFLAGS) -o $(EXE) $(EXE).o
+	$(C++) $(CFLAGS) -o $(EXE) $(EXE).o -pie
 
 $(EXE).o: $(EXE).cpp  $(SRCDIR)/*.* $(SRCDIR)/*/*.* $(SRCDIR)/parsers/webots/*.*
-	g++ $(CFLAGS) -c -I$(ROOTDIR) $(EXE).cpp
+	$(C++) $(CFLAGS) -c -I$(ROOTDIR) $(EXE).cpp
 
 clean:
 	rm -f $(EXE) *.o
