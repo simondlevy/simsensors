@@ -90,7 +90,7 @@ namespace simsens {
                        ) 
                     {
                         if (debug) {
-                            printf("collided with wall: %s\n", wall.name);
+                            printf("collided with wall: %s\n", wall.name.c_str());
                         }
                         return true;
                     }

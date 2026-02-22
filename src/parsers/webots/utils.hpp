@@ -89,12 +89,11 @@ namespace simsens {
                 return false;
             }
 
-            static bool try_parse_name(const string line, char * object_name)
+            static bool try_parse_name(const string line, string & object_name)
             {
                 if (string_contains(line, "name")) {
-                    const auto toks = split_string(line, ' ');
-                    const char * tok = toks[1].c_str();
-                    strncpy(object_name, &tok[1], strlen(tok)-2); // remove quotes
+                    const auto tok = split_string(line, ' ')[1];
+                    object_name.assign(tok, 1, tok.size()-2); // remove quotes
                     return true;
                 }
 

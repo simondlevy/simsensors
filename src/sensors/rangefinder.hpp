@@ -84,7 +84,7 @@ namespace simsens {
             void dump()
             {
                 printf("Rangefinder: \n");
-                printf("  name: %s\n", name);
+                printf("  name: %s\n", name.c_str());
                 printf("  fov: %3.3fr\n", field_of_view_radians);
                 printf("  width: %d\n", width);
                 printf("  height: %d\n", height);
@@ -102,7 +102,7 @@ namespace simsens {
             double field_of_view_radians;
             Vec3 translation;
             Rotation rotation;
-            char name[100];
+            string name;
 
             friend class RangefinderVisualizer;
             friend class RobotParser;

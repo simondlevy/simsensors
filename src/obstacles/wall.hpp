@@ -19,7 +19,9 @@
 #pragma once
 
 #include <stdio.h>
-#include <string.h>
+
+#include <string>
+using namespace std;
 
 #include <simsensors/src/types.h>
 
@@ -32,7 +34,7 @@ namespace simsens {
             Vec3 translation;
             Rotation rotation;
             Vec3 size;
-            char name[100];
+            string name;
 
             Wall()
             {
@@ -42,19 +44,9 @@ namespace simsens {
                 rotation.alpha = 0;
             }
 
-            Wall(const Wall & other): translation(other.translation)
-            {
-                rotation.x = other.rotation.x;
-                rotation.y = other.rotation.y;
-                rotation.z = other.rotation.z;
-                rotation.alpha = other.rotation.alpha;
-
-                size.x = other.size.x;
-                size.y = other.size.y;
-                size.z = other.size.z;
-
-                strcpy(name, other.name);
-             }
+            Wall(const Wall & other) :
+                translation(other.translation),rotation(other.rotation),
+                size(other.size), name(other.name) { }
 
             void dump()
             {
