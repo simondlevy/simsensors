@@ -30,7 +30,7 @@ namespace simsens {
 
         public:
 
-            map<string, Rangefinder &> rangefinders;
+            map<string, Rangefinder> rangefinders;
 
             void dump()
             {
