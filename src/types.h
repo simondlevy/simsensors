@@ -40,6 +40,9 @@ namespace simsens {
         public:
             double x, y, z, phi, theta, psi;
             Pose() = default;
+            Pose(const double x, const double y, const double z,
+                    const double phi, const double theta, const double psi)
+                : x(x), y(y), z(z), phi(phi), theta(theta), psi(psi) {}
             Pose(const Pose & other)
                 : x(other.x), y(other.y), z(other.z),
                   phi(other.phi), theta(other.theta), psi(other.psi) {}
@@ -52,15 +55,6 @@ namespace simsens {
             Rotation(const Rotation & other)
                 : x(other.x), y(other.y), z(other.z), alpha(other.alpha) {}
     };
-
-    typedef struct {
-        double x;
-        double y;
-        double z;
-        double phi;
-        double theta;
-        double psi;
-    } pose_t;
 
     // https://www.cyberbotics.com/doc/reference/transform?version=cyberbotics:R2019a-rev1
     typedef struct {

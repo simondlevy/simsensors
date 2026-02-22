@@ -34,7 +34,7 @@ namespace simsens {
             double min_distance_m;
             double max_distance_m;
 
-            void read(const pose_t & robot_pose, World & world,
+            void read(const Pose & robot_pose, World & world,
                     int * distances_mm)
             {
                 const auto robpose = world.adjust_pose(robot_pose);

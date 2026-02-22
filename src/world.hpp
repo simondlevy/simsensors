@@ -36,7 +36,7 @@ namespace simsens {
 
             vector<Wall> walls;
 
-            pose_t robotPose;
+            Pose robotPose;
 
             bool y_inverted;
 
@@ -45,10 +45,10 @@ namespace simsens {
                 return Vec3(loc.x, yinvert(loc.y), loc.z);
             }
 
-            pose_t adjust_pose(const pose_t & pose)
+            Pose adjust_pose(const Pose & pose)
             {
-                return {pose.x, yinvert(pose.y), pose.z,
-                        pose.phi, pose.theta, pose.psi};
+                return Pose(pose.x, yinvert(pose.y), pose.z,
+                        pose.phi, pose.theta, pose.psi);
             }
 
             double yinvert(const double y)
@@ -100,7 +100,7 @@ namespace simsens {
             }
 
 
-            pose_t getRobotPose()
+            Pose getRobotPose()
             {
                 return robotPose;
             }
