@@ -42,12 +42,9 @@ namespace simsens {
 
                 if (file.is_open()) {
 
-                    string line;
-
+                    string line = {};
                     Wall wall = {};
-
                     bool in_robot = false;
-
                     bool in_wall = false;
 
                     world.y_inverted = true;
