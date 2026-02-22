@@ -19,6 +19,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <string.h>
 
 #include <simsensors/src/types.h>
 
@@ -40,6 +41,24 @@ namespace simsens {
                 rotation.z = 1;
                 rotation.alpha = 0;
             }
+
+            Wall(const Wall & other)
+            {
+                translation.x = other.translation.x;
+                translation.y = other.translation.y;
+                translation.z = other.translation.z;
+
+                rotation.x = other.rotation.x;
+                rotation.y = other.rotation.y;
+                rotation.z = other.rotation.z;
+                rotation.alpha = other.rotation.alpha;
+
+                size.x = other.size.x;
+                size.y = other.size.y;
+                size.z = other.size.z;
+
+                strcpy(name, other.name);
+             }
 
             void dump()
             {

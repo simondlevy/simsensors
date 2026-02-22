@@ -60,7 +60,7 @@ namespace simsens {
                     vec3_t intersection = {};
                     for (auto wall : world.walls) {
                         const auto newdist = intersect_with_wall(
-                                location, azimuth, elevation, *wall,
+                                location, azimuth, elevation, wall,
                                 &intersection);
 
                         dist = min(dist, newdist);

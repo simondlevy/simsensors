@@ -44,26 +44,27 @@ namespace simsens {
 
                     string line;
 
-                    Wall * _wall = nullptr;
+                    Wall wall = {};
 
                     bool in_robot = false;
+
+                    bool in_wall = false;
 
                     world.y_inverted = true;
 
                     while (getline(file, line)) {
 
                         if (ParserUtils::string_contains(line, "Wall {")) {
-                            _wall = new Wall();
+                            in_wall = true;
                         }
 
-                        if (_wall) {
+                        if (in_wall) {
 
-                            parseWall(line, _wall);
+                            parseWall(line, wall);
 
                             if (endOfBlock(line)) {
-
-                                world.walls.push_back(_wall);
-                                _wall = nullptr;
+                                world.walls.push_back(Wall(wall));
+                                in_wall = false;
                             }
                         }
 
@@ -105,18 +106,18 @@ namespace simsens {
                 return ParserUtils::string_contains(line, "}");
             }
 
-            static void parseWall(const string line, Wall * wall)
+            static void parseWall(const string line, Wall & wall)
             {
                 ParserUtils::try_parse_vec3(line, "translation",
-                        wall->translation);
+                        wall.translation);
 
                 ParserUtils::try_parse_rotation(line, "rotation",
-                        wall->rotation);
+                        wall.rotation);
 
                 ParserUtils::try_parse_vec3(line, "size",
-                        wall->size);
+                        wall.size);
 
-                ParserUtils::try_parse_name(line, wall->name);
+                ParserUtils::try_parse_name(line, wall.name);
             }
 
             static void parseRobot(const string line, World & world)

@@ -34,7 +34,7 @@ namespace simsens {
 
         private:
 
-            vector<Wall *> walls;
+            vector<Wall> walls;
 
             pose_t robotPose;
 
@@ -75,13 +75,6 @@ namespace simsens {
 
          public:
 
-            ~World()
-            {
-                for (auto wall : walls) {
-                    delete wall;
-                }
-            }
-
             bool collided(
                     const vec3_t & robot_location, const bool debug=false)
             {
@@ -90,14 +83,14 @@ namespace simsens {
                 for (auto wall : walls) {
 
                     if (
-                            intersect_with_wall_at_azimuth(robloc, *wall, 0) 
-                            || intersect_with_wall_at_azimuth(robloc, *wall, M_PI/2)
-                            || intersect_with_wall_at_azimuth(robloc, *wall, M_PI) 
-                            || intersect_with_wall_at_azimuth(robloc, *wall, 3*M_PI/2)
+                            intersect_with_wall_at_azimuth(robloc, wall, 0) 
+                            || intersect_with_wall_at_azimuth(robloc, wall, M_PI/2)
+                            || intersect_with_wall_at_azimuth(robloc, wall, M_PI) 
+                            || intersect_with_wall_at_azimuth(robloc, wall, 3*M_PI/2)
                        ) 
                     {
                         if (debug) {
-                            printf("collided with wall: %s\n", wall->name);
+                            printf("collided with wall: %s\n", wall.name);
                         }
                         return true;
                     }
@@ -115,7 +108,7 @@ namespace simsens {
             void dump()
             {
                 for (auto wall : walls) {
-                    wall->dump();
+                    wall.dump();
                 }
             }
 
