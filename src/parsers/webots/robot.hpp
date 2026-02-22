@@ -38,46 +38,45 @@ namespace simsens {
                 if (file.is_open()) {
 
                     string line = {};
-                    Rangefinder * rangefinder = nullptr;
+                    Rangefinder rangefinder = {};
                     bool in_rangefinder = false;
 
                     while (getline(file, line)) {
 
                         if (ParserUtils::string_contains(line, "RangeFinder {")) {
                             in_rangefinder = true;
-                            rangefinder = new Rangefinder();
                         }
 
                         if (in_rangefinder) {
 
                             ParserUtils::try_parse_double(line, "fieldOfView",
-                                    rangefinder->field_of_view_radians);
+                                    rangefinder.field_of_view_radians);
 
                             ParserUtils::try_parse_int(line, "width",
-                                    rangefinder->width);
+                                    rangefinder.width);
 
                             ParserUtils::try_parse_int(line, "height",
-                                    rangefinder->height);
+                                    rangefinder.height);
 
                             ParserUtils::try_parse_double(
                                     line, "minRange",
-                                    rangefinder->min_distance_m);
+                                    rangefinder.min_distance_m);
                             ParserUtils::try_parse_double(
                                     line, "maxRange", 
-                                    rangefinder->max_distance_m);
+                                    rangefinder.max_distance_m);
 
                             ParserUtils::try_parse_vec3(line, "translation",
-                                    rangefinder->translation);
+                                    rangefinder.translation);
 
                             ParserUtils::try_parse_rotation(line, "rotation",
-                                        rangefinder->rotation);
+                                        rangefinder.rotation);
 
                             ParserUtils::try_parse_name(line,
-                                    rangefinder->name);
+                                    rangefinder.name);
 
                             if (ParserUtils::string_contains(line, "}") ||
                                     ParserUtils::string_contains(line, "children")) {
-                                robot.rangefinders.insert({rangefinder->name, rangefinder});
+                                robot.rangefinders.insert({rangefinder.name, rangefinder});
                                 in_rangefinder = false;
                             }
                         }

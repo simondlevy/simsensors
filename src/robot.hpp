@@ -30,14 +30,12 @@ namespace simsens {
 
         public:
 
-            map<string, Rangefinder *> rangefinders;
-
-            map<string, Rangefinder &> new_rangefinders;
+            map<string, Rangefinder &> rangefinders;
 
             void dump()
             {
                 for (auto rangefinder : rangefinders) {
-                    rangefinder.second->dump();
+                    rangefinder.second.dump();
                 }
             }
     };
