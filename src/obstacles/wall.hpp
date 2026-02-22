@@ -23,7 +23,7 @@
 #include <string>
 using namespace std;
 
-#include <simsensors/src/types.h>
+#include <simsensors/src/datatypes.h>
 
 namespace simsens {
 
@@ -47,6 +47,8 @@ namespace simsens {
             Wall(const Wall & other) :
                 translation(other.translation),rotation(other.rotation),
                 size(other.size), name(other.name) { }
+
+            Wall& operator=(const Wall&) = default;
 
             void dump()
             {

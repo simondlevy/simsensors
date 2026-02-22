@@ -20,7 +20,7 @@
 
 #include <math.h>
 
-#include <simsensors/src/types.h>
+#include <simsensors/src/datatypes.h>
 #include <simsensors/src/obstacles/wall.hpp>
 
 namespace simsens {

@@ -28,7 +28,7 @@
 #include <vector>
 using namespace std;
 
-#include <simsensors/src/types.h>
+#include <simsensors/src/datatypes.h>
 
 namespace simsens {
 

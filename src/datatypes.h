@@ -24,6 +24,7 @@ namespace simsens {
         public:
             double x, y;
             Vec2() = default;
+            Vec2& operator=(const Vec2&) = default;
             Vec2(const double x, const double y) : x(x), y(y) {}
             Vec2(const Vec2 & other) : x(other.x), y(other.y) { }
     };
@@ -32,6 +33,7 @@ namespace simsens {
         public:
             double x, y, z;
             Vec3() = default;
+            Vec3& operator=(const Vec3&) = default;
             Vec3(const double x, const double y, const double z) : x(x), y(y), z(z) {}
             Vec3(const Vec3 & other) : x(other.x), y(other.y), z(other.z) { }
     };
@@ -40,6 +42,7 @@ namespace simsens {
         public:
             double x, y, z, phi, theta, psi;
             Pose() = default;
+            Pose& operator=(const Pose&) = default;
             Pose(const double x, const double y, const double z,
                     const double phi, const double theta, const double psi)
                 : x(x), y(y), z(z), phi(phi), theta(theta), psi(psi) {}
@@ -53,6 +56,7 @@ namespace simsens {
         public:
             double x, y, z, alpha;
             Rotation() = default;
+            Rotation& operator=(const Rotation&) = default;
             Rotation(const Rotation & other)
                 : x(other.x), y(other.y), z(other.z), alpha(other.alpha) {}
     };
