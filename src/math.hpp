@@ -26,7 +26,7 @@
 namespace simsens {
 
     // https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToEuler/index.htm
-    static void rotation_to_euler(const rotation_t & rotation, vec3_t & angles,
+    static void rotation_to_euler(const rotation_t & rotation, Vec3 & angles,
             double TOL = 2e-2)
     {
         const auto x = rotation.x;
@@ -92,11 +92,11 @@ namespace simsens {
     }
 
     static double intersect_with_wall(
-            const vec3_t robot_location,
+            const Vec3 robot_location,
             const double azimuth_angle,
             const double elevation_angle,
             const Wall & wall,
-            vec3_t * intersection=nullptr)
+            Vec3 * intersection=nullptr)
     {
         static constexpr double MAX_WORLD_DIM_M = 20; // arbitrary
 

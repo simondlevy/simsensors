@@ -119,7 +119,7 @@ namespace simsens {
 
             static void parseRobot(const string line, World & world)
             {
-                vec3_t trans = {};
+                Vec3 trans = {};
                 if (ParserUtils::try_parse_vec3(line, "translation",
                             trans)) {
                     world.robotPose.x = trans.x;
@@ -130,7 +130,7 @@ namespace simsens {
                 rotation_t rot = {};
                 if (ParserUtils::try_parse_rotation(line, "rotation",
                             rot)) {
-                    vec3_t euler = {};
+                    Vec3 euler = {};
                     rotation_to_euler(rot, euler);
                     world.robotPose.phi = euler.x;
                     world.robotPose.theta = euler.z;

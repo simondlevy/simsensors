@@ -40,9 +40,9 @@ namespace simsens {
 
             bool y_inverted;
 
-            vec3_t adjust_location(const vec3_t & loc)
+            Vec3 adjust_location(const Vec3 & loc)
             {
-                return {loc.x, yinvert(loc.y), loc.z};
+                return Vec3(loc.x, yinvert(loc.y), loc.z);
             }
 
             pose_t adjust_pose(const pose_t & pose)
@@ -60,7 +60,7 @@ namespace simsens {
             static constexpr double COLLISION_TOLERANCE_M = 0.05;
 
             static bool intersect_with_wall_at_azimuth(
-                    const vec3_t & robot_location,
+                    const Vec3 & robot_location,
                     const Wall & wall,
                     const double azimuth)
             {
@@ -76,7 +76,7 @@ namespace simsens {
          public:
 
             bool collided(
-                    const vec3_t & robot_location, const bool debug=false)
+                    const Vec3 & robot_location, const bool debug=false)
             {
                 const auto robloc = adjust_location(robot_location);
 

@@ -37,6 +37,7 @@ namespace simsens {
         public:
             double x, y, z;
             Vec3() = default;
+            Vec3(const double x, const double y, const double z) : x(x), y(y), z(z) {}
             Vec3(const Vec3 & other) : x(other.x), y(other.y), z(other.z) { }
     };
 
@@ -56,12 +57,6 @@ namespace simsens {
             Rotation(const Rotation & other)
                 : x(other.x), y(other.y), z(other.z), alpha(other.alpha) {}
     };
-
-    typedef struct {
-        double x;
-        double y;
-        double z;
-    } vec3_t;
 
     typedef struct {
         double x;

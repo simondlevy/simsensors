@@ -42,7 +42,7 @@ namespace simsens {
                 for (int k=0; k<this->width; ++k) {
 
                     // Get rangefinder rotation w.r.t. vehicle
-                    vec3_t rangefinder_angles= {};
+                    Vec3 rangefinder_angles= {};
                     rotation_to_euler(rotation, rangefinder_angles);
 
                     const double azimuth =
@@ -52,12 +52,12 @@ namespace simsens {
 
                     const double elevation = robpose.theta + rangefinder_angles.y; 
 
-                    const vec3_t location =
-                        vec3_t{robpose.x, robpose.y, robpose.z};
+                    const Vec3 location =
+                        Vec3{robpose.x, robpose.y, robpose.z};
 
                     // Run a classic calculate-min loop to get distance to closest wall
                     double dist = INFINITY;
-                    vec3_t intersection = {};
+                    Vec3 intersection = {};
                     for (auto wall : world.walls) {
                         const auto newdist = intersect_with_wall(
                                 location, azimuth, elevation, wall,
@@ -100,7 +100,7 @@ namespace simsens {
         private:
 
             double field_of_view_radians;
-            vec3_t translation;
+            Vec3 translation;
             rotation_t rotation;
             char name[100];
 
