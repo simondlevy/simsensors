@@ -20,16 +20,11 @@
 
 namespace simsens {
 
-    typedef struct {
-        double x;
-        double y;
-    } vec2_t;
-
-
     class Vec2 {
         public:
             double x, y;
             Vec2() = default;
+            Vec2(const double x, const double y) : x(x), y(y) {}
             Vec2(const Vec2 & other) : x(other.x), y(other.y) { }
     };
 

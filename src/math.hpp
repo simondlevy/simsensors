@@ -101,11 +101,11 @@ namespace simsens {
         static constexpr double MAX_WORLD_DIM_M = 20; // arbitrary
 
         // Calculate beam endpoints
-        const vec2_t beam_start_xy = {robot_location.x, robot_location.y};
-        const vec2_t beam_end_xy = {
+        const auto beam_start_xy = Vec2(robot_location.x, robot_location.y);
+        const auto beam_end_xy = Vec2(
             robot_location.x + cos(azimuth_angle) * MAX_WORLD_DIM_M,
-            robot_location.y - sin(azimuth_angle) * MAX_WORLD_DIM_M,
-        };
+            robot_location.y - sin(azimuth_angle) * MAX_WORLD_DIM_M
+        );
 
 
         // Get wall endpoints
