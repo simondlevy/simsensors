@@ -26,7 +26,7 @@
 namespace simsens {
 
     // https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToEuler/index.htm
-    static void rotation_to_euler(const rotation_t & rotation, Vec3 & angles,
+    static void rotation_to_euler(const Rotation & rotation, Vec3 & angles,
             double TOL = 2e-2)
     {
         const auto x = rotation.x;

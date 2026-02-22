@@ -101,7 +101,7 @@ namespace simsens {
 
             double field_of_view_radians;
             Vec3 translation;
-            rotation_t rotation;
+            Rotation rotation;
             char name[100];
 
             friend class RangefinderVisualizer;

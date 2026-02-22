@@ -48,6 +48,7 @@ namespace simsens {
                   phi(other.phi), theta(other.theta), psi(other.psi) {}
     };
 
+    // https://www.cyberbotics.com/doc/reference/transform?version=cyberbotics:R2019a-rev1
     class Rotation {
         public:
             double x, y, z, alpha;
@@ -55,13 +56,4 @@ namespace simsens {
             Rotation(const Rotation & other)
                 : x(other.x), y(other.y), z(other.z), alpha(other.alpha) {}
     };
-
-    // https://www.cyberbotics.com/doc/reference/transform?version=cyberbotics:R2019a-rev1
-    typedef struct {
-        double x;
-        double y;
-        double z;
-        double alpha;
-    } rotation_t;
-
 };

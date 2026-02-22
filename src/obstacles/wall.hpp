@@ -30,7 +30,7 @@ namespace simsens {
         public:
 
             Vec3 translation;
-            rotation_t rotation;
+            Rotation rotation;
             Vec3 size;
             char name[100];
 

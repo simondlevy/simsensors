@@ -127,7 +127,7 @@ namespace simsens {
                     world.robotPose.z = trans.z;
                 }
 
-                rotation_t rot = {};
+                Rotation rot = {};
                 if (ParserUtils::try_parse_rotation(line, "rotation",
                             rot)) {
                     Vec3 euler = {};

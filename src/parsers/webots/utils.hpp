@@ -75,7 +75,7 @@ namespace simsens {
             }
 
             static bool try_parse_rotation(const string line, const string field_name,
-                    rotation_t & rot) 
+                    Rotation & rot) 
             {
                 if (string_contains(line, field_name)) {
                     const auto toks = split_string(line, ' ');
