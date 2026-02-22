@@ -29,7 +29,7 @@ namespace simsens {
 
         public:
 
-            vec3_t translation;
+            Vec3 translation;
             rotation_t rotation;
             vec3_t size;
             char name[100];
@@ -42,12 +42,8 @@ namespace simsens {
                 rotation.alpha = 0;
             }
 
-            Wall(const Wall & other)
+            Wall(const Wall & other): translation(other.translation)
             {
-                translation.x = other.translation.x;
-                translation.y = other.translation.y;
-                translation.z = other.translation.z;
-
                 rotation.x = other.rotation.x;
                 rotation.y = other.rotation.y;
                 rotation.z = other.rotation.z;

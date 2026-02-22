@@ -25,6 +25,38 @@ namespace simsens {
         double y;
     } vec2_t;
 
+
+    class Vec2 {
+        public:
+            double x, y;
+            Vec2() = default;
+            Vec2(const Vec2 & other) : x(other.x), y(other.y) { }
+    };
+
+    class Vec3 {
+        public:
+            double x, y, z;
+            Vec3() = default;
+            Vec3(const Vec3 & other) : x(other.x), y(other.y), z(other.z) { }
+    };
+
+    class Pose {
+        public:
+            double x, y, z, phi, theta, psi;
+            Pose() = default;
+            Pose(const Pose & other)
+                : x(other.x), y(other.y), z(other.z),
+                  phi(other.phi), theta(other.theta), psi(other.psi) {}
+    };
+
+    class Rotation {
+        public:
+            double x, y, z, alpha;
+            Rotation() = default;
+            Rotation(const Rotation & other)
+                : x(other.x), y(other.y), z(other.z), alpha(other.alpha) {}
+    };
+
     typedef struct {
         double x;
         double y;
