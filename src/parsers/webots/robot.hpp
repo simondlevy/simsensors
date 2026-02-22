@@ -37,17 +37,18 @@ namespace simsens {
 
                 if (file.is_open()) {
 
-                    string line;
-
+                    string line = {};
                     Rangefinder * rangefinder = nullptr;
+                    bool in_rangefinder = false;
 
                     while (getline(file, line)) {
 
                         if (ParserUtils::string_contains(line, "RangeFinder {")) {
+                            in_rangefinder = true;
                             rangefinder = new Rangefinder();
                         }
 
-                        if (rangefinder) {
+                        if (in_rangefinder) {
 
                             ParserUtils::try_parse_double(line, "fieldOfView",
                                     rangefinder->field_of_view_radians);
@@ -77,7 +78,7 @@ namespace simsens {
                             if (ParserUtils::string_contains(line, "}") ||
                                     ParserUtils::string_contains(line, "children")) {
                                 robot.rangefinders.insert({rangefinder->name, rangefinder});
-                                rangefinder = nullptr;
+                                in_rangefinder = false;
                             }
                         }
                     }

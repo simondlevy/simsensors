@@ -32,6 +32,8 @@ namespace simsens {
 
             map<string, Rangefinder *> rangefinders;
 
+            map<string, Rangefinder &> new_rangefinders;
+
             void dump()
             {
                 for (auto rangefinder : rangefinders) {
