@@ -14,7 +14,10 @@
 
 C++ = g++
 
-CFLAGS = -O3 -std=c++17 -Wall -Wextra
+# Uncomment this and run with valgrind to check for memory issues
+DBGFLAGS = -g -O0
+
+CFLAGS = -O3 -std=c++17 -Wall -Wextra $(DBGFLAGS)
 
 ROOTDIR = ../../..
 
@@ -30,7 +33,7 @@ run: $(EXE)
 	./$(EXE) $(DATADIR)/twoexit.wbt $(DATADIR)/DiyQuad.proto 
 
 $(EXE): $(EXE).o
-	$(C++) $(CFLAGS) -o $(EXE) $(EXE).o -pie
+	$(C++) $(CFLAGS) -o $(EXE) $(EXE).o
 
 $(EXE).o: $(EXE).cpp  $(SRCDIR)/*.* $(SRCDIR)/*/*.* $(SRCDIR)/parsers/webots/*.*
 	$(C++) $(CFLAGS) -c -I$(ROOTDIR) $(EXE).cpp
