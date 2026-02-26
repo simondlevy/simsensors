@@ -32,11 +32,13 @@ namespace simsens {
         friend class Rangefinder;
         friend class CollisionDetector;
 
+        public:
+
+            Pose robotPose;
+
         private:
 
             vector<Wall> walls;
-
-            Pose robotPose;
 
             bool y_inverted;
 
